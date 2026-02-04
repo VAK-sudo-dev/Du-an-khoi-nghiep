@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trà Phú Hội - (Slogan)</title>
+    <meta name="description" content="Trà Phú Hội - (Slogan)">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M20 5C20 5 15 8 15 15C15 18 16 20 18 22C16 24 15 26 15 29C15 36 20 39 20 39C20 39 25 36 25 29C25 26 24 24 22 22C24 20 25 18 25 15C25 8 20 5 20 5Z" fill="currentColor"/>
+                            <ellipse cx="20" cy="32" rx="8" ry="3" fill="currentColor" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text">Tên Shop</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="nav" id="nav">
+                    <ul class="nav-list">
+                        <li><a href="#home" class="nav-link active">Trang chủ</a></li>
+                        <li><a href="#products" class="nav-link">Sản phẩm</a></li>
+                        <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
+                        <li><a href="#blog" class="nav-link">Blog</a></li>
+                        <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <button class="icon-btn search-btn" aria-label="Tìm kiếm">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                            <path d="M21 21L16.65 16.65" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn cart-btn" aria-label="Giỏ hàng" id="cartBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 2L7 6M17 2L19 6M3 6H21M19 6L17 20H7L5 6M10 11V15M14 11V15" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                    <button class="hamburger" id="hamburger" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEARCH MODAL -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <button class="search-close" id="searchClose">&times;</button>
+            <div class="search-box">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                    <path d="M21 21L16.65 16.65" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="hero-leaf hero-leaf-1"></div>
+            <div class="hero-leaf hero-leaf-2"></div>
+            <div class="hero-leaf hero-leaf-3"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-title-small">(Slogan)</span>
+                    <span class="hero-title-main">Trà Phú Hội<br>(1 câu gì đó)</span>
+                </h1>
+                <p class="hero-description">
+                    (Description ngắn)
+                </p>
+                <div class="hero-buttons">
+                    <a href="#products" class="btn btn-primary">Khám phá ngay</a>
+                    <a href="#about" class="btn btn-secondary">Về chúng tôi</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Cuộn xuống</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <path d="M5 7L10 12L15 7" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS SECTION -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
+                <p class="section-subtitle">Những dòng trà được yêu thích nhất</p>
+            </div>
+            
+            <div class="products-filter">
+                <button class="filter-btn active" data-filter="all">Tất cả</button>
+                <button class="filter-btn" data-filter="green">Trà Phú Hội</button>
+                
+                <!-- Thêm các loại trà khác nếu có
+                <button class="filter-btn" data-filter="black">Tên trà</button>
+                <button class="filter-btn" data-filter="oolong">Tên trà</button>
+                <button class="filter-btn" data-filter="herbal">Tên trà</button>
+                -->
+
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Javascript gánh sản phẩm -->
+            </div>
+
+            <div class="products-load-more">
+                <button class="btn btn-secondary" id="loadMore">Xem thêm sản phẩm</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <div class="about-image-main"></div>
+                    <div class="about-badge">
+                        <span class="badge-number">100%</span>
+                        <span class="badge-text">Organic</span>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <h2 class="section-title">Về Chất lượng</h2>
+                    <p class="about-text">
+                        (Làm nổi bật chất lượng sản phẩm, quy trình sản xuất, cam kết với khách hàng, bla bla...)
+                    </p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div class="feature-text">
+                                <h4>100% Thuốc trừ sâu</h4>
+                                <p>Chắc chắn sử dụng thuốc nên yên tâm </p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div class="feature-text">
+                                <h4>Bla bla</h4>
+                                <p>Bla bla</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div class="feature-text">
+                                <h4>Bảo Quản Bla bla</h4>
+                                <p>Bla bla</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#products" class="btn btn-primary">Khám phá sản phẩm</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOG SECTION -->
+    <section class="blog" id="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Blog</h2>
+                <p class="section-subtitle">Một số bài viết về trà</p>
+            </div>
+
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 300%22><rect fill=%22%233A7D44%22 width=%22400%22 height=%22300%22/><text x=%2250%25%22 y=%2250%25%22 font-size=%2220%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22>Ảnh 1</text></svg>')"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Sức khỏe</span>
+                        <h3 class="blog-title">7 Tác Hại Tuyệt Vời Của Trà Xanh</h3>
+                        <p class="blog-excerpt">Trà xanh không chỉ là thức uống dở vcl mà còn mang lại vô số tác hại cho sức khỏe...</p>
+                        <a href="#" class="blog-link">Đọc thêm →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 300%22><rect fill=%22%234CAF50%22 width=%22400%22 height=%22300%22/><text x=%2250%25%22 y=%2250%25%22 font-size=%2220%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22>Ảnh 2</text></svg>')"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Hướng dẫn</span>
+                        <h3 class="blog-title">Hao tu pha trà đúng cách</h3>
+                        <p class="blog-excerpt">Ýe that just a tờ tu ri ồ</p>
+                        <a href="#" class="blog-link">Đọc thêm →</a>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2 class="section-title">Liên Hệ Với Chúng Tôi</h2>
+                    <p class="contact-description">
+                        Bạn có câu hỏi về sản phẩm hoặc cần tư vấn? 
+                        Chúng tôi luôn sẵn sàng hỗ trợ bạn.
+                    </p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">📍</div>
+                            <div>
+                                <h4>Địa chỉ</h4>
+                                <p>Nhà Tao</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📞</div>
+                            <div>
+                                <h4>Điện thoại</h4>
+                                <p>9999 999 999</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">✉️</div>
+                            <div>
+                                <h4>Email</h4>
+                                <p>concak@cailoz.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <input type="text" placeholder="Họ và tên" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" placeholder="Số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Tin nhắn" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Gửi tin nhắn</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo footer-logo">
+                        <div class="logo-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <path d="M20 5C20 5 15 8 15 15C15 18 16 20 18 22C16 24 15 26 15 29C15 36 20 39 20 39C20 39 25 36 25 29C25 26 24 24 22 22C24 20 25 18 25 15C25 8 20 5 20 5Z" fill="currentColor"/>
+                                <ellipse cx="20" cy="32" rx="8" ry="3" fill="currentColor" opacity="0.3"/>
+                            </svg>
+                        </div>
+                        <span class="logo-text">Tên Shop</span>
+                    </div>
+                    <p class="footer-desc">(Slogan)</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="YouTube">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Sản phẩm</h4>
+                    <ul class="footer-links">
+                        <li><a href="#products">Trà Phú Hội</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Thông tin</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">Về chúng tôi</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#contact">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Đăng ký nhận tin</h4>
+                    <p class="newsletter-text">Nhận thông tin về sản phẩm mới và ưu đãi đặc biệt</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Email của bạn" required>
+                        <button type="submit" class="btn btn-primary">Đăng ký</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 VAK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Giỏ hàng của bạn</h3>
+            <button class="cart-close" id="cartClose">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded by JavaScript -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Tổng cộng:</span>
+                <span class="cart-total-amount" id="cartTotal">0đ</span>
+            </div>
+            <button class="btn btn-primary btn-full" id="checkoutBtn">Thanh toán</button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- JavaScript Files -->
+    <script src="data/products.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
