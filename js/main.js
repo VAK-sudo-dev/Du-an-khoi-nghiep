@@ -6,11 +6,14 @@
 // ====== GLOBAL STATE ======
 let cart = [];
 let currentFilter = 'all';
-let displayedProducts = 8; // Số sản phẩm hiển thị ban đầu
+let displayedProducts = 1; // Số sản phẩm hiển thị ban đầu
+let isLoggedIn = false; // Thêm state đăng nhập
+let currentUser = null; // Thông tin user
 
 // ====== INITIALIZATION ======
 document.addEventListener('DOMContentLoaded', () => {
     initCart();
+    initAuth();
     renderProducts();
     initEventListeners();
     initScrollAnimations();
@@ -354,6 +357,15 @@ function initEventListeners() {
             return;
         }
         
+        // Check đăng nhập
+        if (!isLoggedIn) {
+            alert('Vui lòng đăng nhập để thanh toán!');
+            // Redirect đến trang đăng nhập
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        // Nếu đã đăng nhập, tiếp tục thanh toán
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         alert(`Tổng đơn hàng: ${formatPrice(total)}\n\nChức năng thanh toán đang được phát triển. Vui lòng liên hệ: 9999 999 999`);
     });
@@ -373,6 +385,62 @@ function initEventListeners() {
         showNotification('Đăng ký nhận tin thành công!');
         newsletterForm.reset();
     });
+
+    // Auth button
+    userBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        if (isLoggedIn) {
+            // Toggle dropdown
+            const dropdown = document.querySelector('.user-dropdown');
+            dropdown.classList.toggle('active');
+        } else {
+            // Chuyển đến trang đăng nhập
+            window.location.href = 'login.html';
+        }
+    });
+
+    // Close dropdown khi click ra ngoài
+    document.addEventListener('click', () => {
+        const dropdown = document.querySelector('.user-dropdown');
+        if (dropdown) dropdown.classList.remove('active');
+    });
+
+    // User dropdown toggle
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        // Nếu chưa đăng nhập, chuyển tới trang login
+        if (!isLoggedIn) {
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        // Toggle dropdown
+        userBtn.classList.toggle('active');
+        userDropdown.classList.toggle('active');
+    });
+    
+    // Đóng dropdown khi click bên ngoài
+    document.addEventListener('click', (e) => {
+        if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+            userBtn.classList.remove('active');
+            userDropdown.classList.remove('active');
+        }
+    });
+    
+    // Logout button
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutUser();
+            userDropdown.classList.remove('active');
+        });
+    }
 }
 
 // ====== SMOOTH SCROLL ======
@@ -519,6 +587,59 @@ function isInViewport(element) {
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
 }
+
+// ====== AUTH MANAGEMENT ======
+function initAuth() {
+    const savedUser = localStorage.getItem('teaUser');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        isLoggedIn = true;
+        updateUserUI();
+    }
+}
+
+function loginUser(userData) {
+    currentUser = userData;
+    isLoggedIn = true;
+    localStorage.setItem('teaUser', JSON.stringify(userData));
+    updateUserUI();
+    showNotification('Đăng nhập thành công!');
+}
+
+function logoutUser() {
+    currentUser = null;
+    isLoggedIn = false;
+    localStorage.removeItem('teaUser');
+    updateUserUI();
+    showNotification('Đã đăng xuất');
+}
+
+function updateUserUI() {
+    const userBtn = document.getElementById('userBtn');
+    const userArrow = userBtn.querySelector('.user-arrow');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    if (isLoggedIn && currentUser) {
+        // Hiển thị trạng thái đã đăng nhập
+        userBtn.classList.add('logged-in');
+        userArrow.style.display = 'inline';
+        
+        // Cập nhật thông tin user trong dropdown
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userInitial = document.getElementById('userInitial');
+        
+        if (userName) userName.textContent = currentUser.name || 'User';
+        if (userEmail) userEmail.textContent = currentUser.email || '';
+        if (userInitial) userInitial.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+        
+    } else {
+        // Trạng thái chưa đăng nhập
+        userBtn.classList.remove('logged-in');
+        userArrow.style.display = 'none';
+    }
+}
+
 
 // ====== CONSOLE LOG ======
 console.log('%c🍃 TeaVerse Website', 'color: #2D5016; font-size: 20px; font-weight: bold;');
