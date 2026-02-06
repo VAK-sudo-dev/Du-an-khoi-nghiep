@@ -342,6 +342,12 @@ const FormSwitcher = {
         
         const successText = FormSwitcher.successMessage.querySelector('.success-text');
         successText.textContent = message;
+        
+        // Chuyển thẳng vào trang web bán hàng sau 2 giây
+        setTimeout(() => {
+            // Thay đổi 'index.html' thành tên file trang chủ của bạn
+            window.location.href = 'index.html';
+        }, 2000);
     },
     
     // Clear all error messages

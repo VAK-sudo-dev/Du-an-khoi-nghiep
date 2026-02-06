@@ -242,6 +242,11 @@ function closeSearchAndScroll(productId) {
 // ====== EVENT LISTENERS ======
 
 function initEventListeners() {
+
+    console.log('Initializing event listeners...');
+    console.log('User button found:', document.getElementById('userBtn'));
+    console.log('Is logged in:', isLoggedIn);
+
     // Header scroll effect
     window.addEventListener('scroll', () => {
         const header = document.getElementById('header');
@@ -387,51 +392,55 @@ function initEventListeners() {
     });
 
     // Auth button
-    userBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        
-        if (isLoggedIn) {
-            // Toggle dropdown
-            const dropdown = document.querySelector('.user-dropdown');
-            dropdown.classList.toggle('active');
-        } else {
-            // Chuyển đến trang đăng nhập
-            window.location.href = 'login.html';
-        }
-    });
-
-    // Close dropdown khi click ra ngoài
-    document.addEventListener('click', () => {
-        const dropdown = document.querySelector('.user-dropdown');
-        if (dropdown) dropdown.classList.remove('active');
-    });
-
-    // User dropdown toggle
     const userBtn = document.getElementById('userBtn');
     const userDropdown = document.getElementById('userDropdown');
-    
-    userBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        
-        // Nếu chưa đăng nhập, chuyển tới trang login
-        if (!isLoggedIn) {
-            window.location.href = 'login.html';
-            return;
-        }
-        
-        // Toggle dropdown
-        userBtn.classList.toggle('active');
-        userDropdown.classList.toggle('active');
-    });
-    
+
+    if (userBtn && userDropdown) {
+        userBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Nếu chưa đăng nhập, chuyển tới trang login
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Toggle dropdown
+            userBtn.classList.toggle('active');
+            userDropdown.classList.toggle('active');
+        });
+    }
+
     // Đóng dropdown khi click bên ngoài
     document.addEventListener('click', (e) => {
-        if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-            userBtn.classList.remove('active');
-            userDropdown.classList.remove('active');
+        if (userBtn && userDropdown) {
+            if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                userBtn.classList.remove('active');
+                userDropdown.classList.remove('active');
+            }
         }
     });
-    
+
+    // Profile button
+    const profileBtn = document.getElementById('profileBtn');
+    if (profileBtn) {
+        profileBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Chức năng Hồ sơ - Đang phát triển');
+            userDropdown.classList.remove('active');
+        });
+    }
+
+    // Orders button
+    const ordersBtn = document.getElementById('ordersBtn');
+    if (ordersBtn) {
+        ordersBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Chức năng Lịch sử đặt hàng - Đang phát triển');
+            userDropdown.classList.remove('active');
+        });
+    }
+
     // Logout button
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
@@ -440,7 +449,8 @@ function initEventListeners() {
             logoutUser();
             userDropdown.classList.remove('active');
         });
-    }
+    }    
+
 }
 
 // ====== SMOOTH SCROLL ======
@@ -617,26 +627,21 @@ function logoutUser() {
 function updateUserUI() {
     const userBtn = document.getElementById('userBtn');
     const userArrow = userBtn.querySelector('.user-arrow');
-    const userDropdown = document.getElementById('userDropdown');
+    const userName = document.getElementById('userName');
     
     if (isLoggedIn && currentUser) {
         // Hiển thị trạng thái đã đăng nhập
         userBtn.classList.add('logged-in');
-        userArrow.style.display = 'inline';
+        if (userArrow) userArrow.style.display = 'inline';
         
-        // Cập nhật thông tin user trong dropdown
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
-        const userInitial = document.getElementById('userInitial');
-        
-        if (userName) userName.textContent = currentUser.name || 'User';
-        if (userEmail) userEmail.textContent = currentUser.email || '';
-        if (userInitial) userInitial.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
-        
+        // Cập nhật tên user
+        if (userName) {
+            userName.textContent = `Xin chào, ${currentUser.name || 'Người dùng'}`;
+        }
     } else {
         // Trạng thái chưa đăng nhập
         userBtn.classList.remove('logged-in');
-        userArrow.style.display = 'none';
+        if (userArrow) userArrow.style.display = 'none';
     }
 }
 
@@ -644,4 +649,4 @@ function updateUserUI() {
 // ====== CONSOLE LOG ======
 console.log('%c🍃 TeaVerse Website', 'color: #2D5016; font-size: 20px; font-weight: bold;');
 console.log('%cWebsite bán trà cao cấp - Thiết kế hiện đại, tối giản', 'color: #3A7D44; font-size: 14px;');
-console.log('%cPhát triển bởi AI Assistant', 'color: #6FBF73; font-size: 12px;');
+console.log('%cPhát triển bởi VAK', 'color: #6FBF73; font-size: 12px;');

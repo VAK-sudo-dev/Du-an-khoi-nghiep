@@ -476,6 +476,45 @@ body {
     display: none;
 }
 
+/* Căn giữa success message và ẨN HẾT MỌI THỨ */
+.success-message:not(.hidden) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 450px;
+    z-index: 9999;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    box-shadow: var(--shadow-xl);
+}
+
+/* Ẩn toàn bộ panel container */
+.success-message:not(.hidden) ~ .panel-container {
+    display: none !important;
+}
+
+/* Làm mờ background */
+body:has(.success-message:not(.hidden)) .container {
+    background: rgba(245, 247, 246, 0.95);
+}
+
+/* Ẩn background circles */
+body:has(.success-message:not(.hidden)) .bg-circle {
+    opacity: 0 !important;
+}
+
+/* Ẩn brand */
+.success-message:not(.hidden) ~ * {
+    opacity: 0;
+}
+
+.success-message:not(.hidden) {
+    opacity: 1 !important;
+}
+
 .success-icon {
     margin-bottom: var(--space-lg);
     animation: checkmarkPop 0.6s ease 0.2s backwards;
@@ -858,6 +897,28 @@ body {
     .btn {
         margin-top: 0.25rem; /* Giảm từ 0.5rem */
     }
+}
+
+/* Ẩn welcome panel khi success message hiển thị */
+.auth-card .success-message:not(.hidden) ~ .panel-container .welcome-panel {
+    display: none !important;
+}
+
+/* Căn giữa success message và mở rộng khi welcome panel ẩn */
+.success-message:not(.hidden) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 500px;
+    z-index: 10;
+}
+
+/* Ẩn panel container khi success message hiển thị */
+.auth-card .success-message:not(.hidden) ~ .panel-container {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Hide welcome panel on mobile */
