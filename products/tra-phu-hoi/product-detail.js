@@ -183,7 +183,7 @@ function initEventListeners() {
     const buyNowBtn = document.getElementById('buyNowBtn');
     buyNowBtn.addEventListener('click', () => {
         addToCart(currentQuantity);
-        window.location.href = '../../checkout.html';
+        window.location.href = '../../checkout/checkout.html';
     });
 
     // Cart sidebar
@@ -215,7 +215,7 @@ function initEventListeners() {
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
             if (cart.length > 0) {
-                window.location.href = '../../checkout.html';
+                window.location.href = '../../checkout/checkout.html';
             } else {
                 showNotification('Giỏ hàng trống!');
             }

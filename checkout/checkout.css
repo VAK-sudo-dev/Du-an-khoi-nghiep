@@ -1,0 +1,850 @@
+/* ============================================
+   CHECKOUT PAGE STYLES
+   Combining Shopee & VNG Shop aesthetics
+   ============================================ */
+
+:root {
+    /* Colors - Match main.css */
+    --primary-color: #2D5016;        /* Xanh lá chính */
+    --primary-light: #3A7D44;        /* Xanh lá sáng */
+    --primary-lighter: #6FBF73;      /* Xanh lá nhạt */
+    --accent-color: #8B7355;         /* Màu nhấn */
+    --text-dark: #1A1A1A;
+    --text-light: #666666;
+    --text-muted: #999999;
+    --border-color: #CCCCCC;
+    --bg-light: #F5F1E8;            /* Màu kem */
+    --white: #FFFFFF;
+    --success-color: #3A7D44;
+    --danger-color: #EF4444;
+    
+    /* Shopee Colors - giữ nguyên cho một số điểm nhấn */
+    --shopee-orange: #8B7355;       /* Đổi sang màu accent */
+    --shopee-light: #F5F1E8;
+    
+    /* Spacing */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(45, 80, 22, 0.08);
+    --shadow-md: 0 4px 16px rgba(45, 80, 22, 0.12);
+    --shadow-lg: 0 8px 32px rgba(45, 80, 22, 0.16);
+    
+    /* Transitions */
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.checkout-header {
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 20px 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon svg {
+    color: var(--primary-color);
+}
+
+/* Checkout Steps */
+.checkout-steps {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.step i {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    font-size: 18px;
+    transition: var(--transition);
+}
+
+.step span {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.step.completed i,
+.step.active i {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+.step.completed,
+.step.active {
+    color: var(--primary-color);
+}
+
+.step-line {
+    width: 60px;
+    height: 2px;
+    background: var(--border-color);
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+
+.checkout-main {
+    padding: 30px 0 60px;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* ============================================
+   ORDER SECTION (LEFT - Shopee Style)
+   ============================================ */
+
+.order-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.info-card {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--shopee-light) 0%, var(--white) 100%);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-header i {
+    color: var(--shopee-orange);
+    font-size: 1.25rem;
+}
+
+.card-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.card-content {
+    padding: 20px;
+}
+
+/* Address Info */
+.address-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.address-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.address-row strong {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.phone {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.address-detail {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.btn-change {
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-change:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+/* Product List */
+.products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.product-item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.product-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--border-color);
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.product-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+.product-variant {
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.product-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.product-quantity {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.product-price {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--shopee-orange);
+}
+
+/* Order Summary */
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.summary-row.discount {
+    color: var(--success-color);
+}
+
+.summary-row.total {
+    padding-top: 16px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.total-amount {
+    color: var(--shopee-orange);
+    font-size: 1.5rem;
+}
+
+.summary-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 8px 0;
+}
+
+/* Order Note */
+.note-card label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+}
+
+.note-card label i {
+    color: var(--primary-color);
+}
+
+.note-card textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    transition: var(--transition);
+}
+
+.note-card textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(45, 90, 74, 0.1);
+}
+
+/* ============================================
+   PAYMENT SECTION (RIGHT - VNG Shop Style)
+   ============================================ */
+
+.payment-section {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.payment-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    padding-bottom: 24px;
+}
+
+.payment-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.payment-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.payment-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* Payment Methods */
+.payment-methods {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-option {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.payment-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.payment-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.payment-option:hover .payment-content {
+    border-color: var(--primary-color);
+    background: rgba(45, 90, 74, 0.02);
+}
+
+.payment-option input:checked ~ .payment-content {
+    border-color: var(--primary-color);
+    background: rgba(45, 90, 74, 0.05);
+}
+
+.payment-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.payment-icon.vietqr {
+    background: #fff;
+}
+
+.payment-icon.vietqr img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.payment-icon.card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--white);
+    font-size: 24px;
+}
+
+.payment-icon.cod {
+    background: linear-gradient(135deg, #8B7355 0%, #A89080 100%);
+    color: var(--white);
+    font-size: 24px;
+}
+
+.payment-info {
+    flex: 1;
+}
+
+.payment-name {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.card-brands {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.card-brands img {
+    height: 20px;
+    width: auto;
+}
+
+.payment-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    position: relative;
+    transition: var(--transition);
+}
+
+.payment-option input:checked ~ .payment-content .payment-radio {
+    border-color: var(--primary-color);
+}
+
+.payment-option input:checked ~ .payment-content .payment-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--primary-color);
+    border-radius: 50%;
+}
+
+/* Payment Summary */
+.payment-summary {
+    padding: 20px 24px;
+    background: var(--bg-light);
+    border-top: 1px solid var(--border-color);
+}
+
+.summary-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+    font-size: 1rem;
+}
+
+.summary-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.summary-item.discount {
+    color: var(--success-color);
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.total-price {
+    font-size: 1.75rem;
+    color: var(--shopee-orange);
+}
+
+/* Checkout Button */
+.btn-checkout {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+}
+
+.btn-checkout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 80, 22, 0.4);
+}
+
+.btn-checkout:active {
+    transform: translateY(0);
+}
+
+.checkout-btn-wrap {
+    padding: 16px 24px;
+}
+
+.btn-checkout {
+    width: 100%;
+    margin: 0;
+}
+
+
+/* Security Note */
+.security-note {
+    padding: 16px 24px 24px;
+    display: flex;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.security-note i {
+    color: var(--success-color);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.security-note a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.security-note a:hover {
+    text-decoration: underline;
+}
+
+/* Support Box */
+.support-box {
+    background: linear-gradient(
+        135deg,
+        var(--primary-light) 0%,
+        var(--primary-lighter) 100%
+    );
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    gap: 16px;
+    color: var(--white);
+}
+
+.support-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.support-content h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.support-content p {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.support-content a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.support-content a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.checkout-footer {
+    background: var(--white);
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 40px;
+}
+
+.checkout-footer p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-section {
+        position: static;
+    }
+
+    .checkout-steps {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-header {
+        padding: 15px 0;
+    }
+
+    .logo {
+        font-size: 1.25rem;
+    }
+
+    .logo-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .checkout-main {
+        padding: 20px 0 40px;
+    }
+
+    .card-header {
+        padding: 14px 16px;
+    }
+
+    .card-header h3 {
+        font-size: 1rem;
+    }
+
+    .card-content {
+        padding: 16px;
+    }
+
+    .product-image {
+        width: 70px;
+        height: 70px;
+    }
+
+    .product-name {
+        font-size: 0.95rem;
+    }
+
+    .payment-header {
+        padding: 20px 16px;
+    }
+
+    .payment-methods {
+        padding: 16px;
+    }
+
+    .payment-summary {
+        padding: 16px;
+    }
+
+    .btn-checkout {
+        margin: 0px;
+        padding: 14px;
+        font-size: 1rem;
+    }
+
+    .security-note {
+        padding: 12px 16px 20px;
+    }
+
+    .support-box {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 12px;
+    }
+
+    .address-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .product-item {
+        gap: 12px;
+    }
+
+    .product-price {
+        font-size: 1rem;
+    }
+
+    .total-amount {
+        font-size: 1.25rem;
+    }
+
+    .payment-content {
+        padding: 12px;
+    }
+
+    .payment-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .total-price {
+        font-size: 1.5rem;
+    }
+
+    .support-box {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .support-icon {
+        margin: 0 auto;
+    }
+}

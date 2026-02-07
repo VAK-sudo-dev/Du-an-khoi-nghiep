@@ -413,8 +413,7 @@ function initEventListeners() {
         }
         
         // Nếu đã đăng nhập, tiếp tục thanh toán
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        alert(`Tổng đơn hàng: ${formatPrice(total)}\n\nChức năng thanh toán đang được phát triển. Vui lòng liên hệ: 9999 999 999`);
+        window.location.href = 'checkout/checkout.html';
     });
 
     // Contact form
