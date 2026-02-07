@@ -1,41 +1,35 @@
 /* ============================================
-   TEAVERSE - MAIN STYLESHEET
-   Elegant Tea Shop Website
+   BẢN KIỂU XỬ LÝ CHÍNH
    ============================================ */
 
-/* ====== CSS VARIABLES ====== */
+/* ====== BIẾN CSS ====== */
 :root {
-    /* Colors - Tea Inspired Palette */
-    --primary: #2D5016;        /* Deep tea green */
-    --primary-light: #3A7D44;  /* Medium tea green */
-    --primary-lighter: #6FBF73; /* Light tea green */
-    --accent: #8B7355;         /* Tea brown */
-    --cream: #F5F1E8;          /* Warm cream */
-    --beige: #E8DCC4;          /* Soft beige */
+    --primary: #2D5016;        
+    --primary-light: #3A7D44;  
+    --primary-lighter: #6FBF73; 
+    --accent: #8B7355;         
+    --cream: #F5F1E8;          
+    --beige: #E8DCC4;          
     --white: #FFFFFF;
     --black: #1A1A1A;
     --gray: #666666;
     --gray-light: #CCCCCC;
     
-    /* Typography */
     --font-display: 'Playfair Display', serif;
     --font-body: 'Quicksand', sans-serif;
     
-    /* Spacing */
     --section-padding: 100px;
     --container-width: 1200px;
     
-    /* Transitions */
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     
-    /* Shadows */
     --shadow-sm: 0 2px 8px rgba(45, 80, 22, 0.08);
     --shadow-md: 0 4px 16px rgba(45, 80, 22, 0.12);
     --shadow-lg: 0 8px 32px rgba(45, 80, 22, 0.16);
 }
 
-/* ====== RESET & BASE STYLES ====== */
+/* ====== ĐẶT LẠI & KIỂU CƠ BẢN ====== */
 * {
     margin: 0;
     padding: 0;
@@ -85,7 +79,7 @@ input, textarea {
     outline: none;
 }
 
-/* ====== UTILITY CLASSES ====== */
+/* ====== LỚP TIỆN ÍCH ====== */
 .container {
     max-width: var(--container-width);
     margin: 0 auto;
@@ -122,7 +116,7 @@ input, textarea {
     margin: 0 auto;
 }
 
-/* Buttons */
+/* NÚT */
 .btn {
     display: inline-block;
     padding: 14px 32px;
@@ -178,7 +172,7 @@ input, textarea {
     width: 100%;
 }
 
-/* Icon Buttons */
+/* NÚT BIỂU TƯỢNG */
 .icon-btn {
     width: 44px;
     height: 44px;
@@ -194,13 +188,13 @@ input, textarea {
     background: var(--beige);
 }
 
-/* ====== HEADER ====== */
+/* ====== PHẦN ĐẦU TRANG ====== */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 5000;
+    z-index: 1000;
     background: var(--white);
     transition: var(--transition);
     box-shadow: var(--shadow-sm);
@@ -217,7 +211,7 @@ input, textarea {
     padding: 20px 0;
 }
 
-/* Logo */
+/* LOGO */
 .logo {
     display: flex;
     align-items: center;
@@ -234,7 +228,7 @@ input, textarea {
     color: var(--primary);
 }
 
-/* Navigation */
+/* ĐIỀU HƯỚNG */
 .nav-list {
     display: flex;
     gap: 40px;
@@ -263,7 +257,7 @@ input, textarea {
     width: 100%;
 }
 
-/* Header Actions */
+/* HÀNH ĐỘNG ĐẦU TRANG */
 .header-actions {
     display: flex;
     align-items: center;
@@ -287,7 +281,7 @@ input, textarea {
     font-weight: 700;
 }
 
-/* Hamburger Menu */
+/* MENU HAMBURGER */
 .hamburger {
     display: none;
     flex-direction: column;
@@ -317,7 +311,7 @@ input, textarea {
     transform: rotate(-45deg) translate(7px, -6px);
 }
 
-/* ====== SEARCH MODAL ====== */
+/* ====== MODAL TÌM KIẾM ====== */
 .search-modal {
     position: fixed;
     top: 0;
@@ -403,7 +397,7 @@ input, textarea {
     overflow-y: auto;
 }
 
-/* ====== HERO SECTION ====== */
+/* ====== PHẦN HERO ====== */
 .hero {
     min-height: 100vh;
     display: flex;
@@ -425,7 +419,7 @@ input, textarea {
     z-index: 0;
 }
 
-/* Animated Tea Leaves */
+/* LÁ TRÀ HOẠT ĐỘNG */
 .hero-leaf {
     position: absolute;
     width: 200px;
@@ -539,7 +533,7 @@ input, textarea {
     }
 }
 
-/* ====== CATEGORIES SECTION ====== */
+/* ====== PHẦN DANH MỤC ====== */
 .categories {
     padding: 80px 0;
     background: var(--white);
@@ -583,7 +577,7 @@ input, textarea {
     font-size: 0.95rem;
 }
 
-/* ====== PRODUCTS SECTION ====== */
+/* ====== PHẦN SẢN PHẨM ====== */
 .products {
     padding: var(--section-padding) 0;
     background: var(--cream);
@@ -619,7 +613,7 @@ input, textarea {
     margin-bottom: 50px;
 }
 
-/* Product Card */
+/* THẺ SẢN PHẨM */
 .product-card {
     background: var(--white);
     border-radius: 20px;
@@ -723,7 +717,7 @@ input, textarea {
     text-align: center;
 }
 
-/* ====== ABOUT SECTION ====== */
+/* ====== PHẦN GIỚI THIỆU ====== */
 .about {
     padding: var(--section-padding) 0;
     background: var(--white);
@@ -838,7 +832,7 @@ input, textarea {
     line-height: 1.6;
 }
 
-/* ====== BLOG SECTION ====== */
+/* ====== PHẦN BLOG ====== */
 .blog {
     padding: var(--section-padding) 0;
     background: var(--cream);
@@ -910,7 +904,7 @@ input, textarea {
     gap: 12px;
 }
 
-/* ====== CONTACT SECTION ====== */
+/* ====== PHẦN LIÊN HỆ ====== */
 .contact {
     padding: var(--section-padding) 0;
     background: var(--white);
@@ -956,7 +950,7 @@ input, textarea {
     color: var(--gray);
 }
 
-/* Contact Form */
+/* BIỂU MẪU LIÊN HỆ */
 .contact-form {
     background: var(--cream);
     padding: 40px;
@@ -987,7 +981,7 @@ input, textarea {
     min-height: 120px;
 }
 
-/* ====== FOOTER ====== */
+/* ====== CHÂN TRANG ====== */
 .footer {
     background: var(--primary);
     color: var(--white);
@@ -1087,7 +1081,7 @@ input, textarea {
     color: rgba(255, 255, 255, 0.6);
 }
 
-/* ====== CART SIDEBAR ====== */
+/* ====== THANH BÊN GIỎ HÀNG ====== */
 .cart-sidebar {
     position: fixed;
     top: 0;
@@ -1096,7 +1090,7 @@ input, textarea {
     height: 100%;
     background: var(--white);
     box-shadow: var(--shadow-lg);
-    z-index: 3000;
+    z-index: 2001;
     display: flex;
     flex-direction: column;
     transition: var(--transition);
@@ -1240,7 +1234,7 @@ input, textarea {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 2500;
+    z-index: 2000;
     display: none;
     pointer-events: none;
     backdrop-filter: blur(2px);
@@ -1268,7 +1262,7 @@ input, textarea {
     font-size: 1.125rem;
 }
 
-/* ====== SCROLL ANIMATIONS ====== */
+/* ====== HOẠT ĐỘNG CUỘN ====== */
 .fade-in {
     opacity: 0;
     transform: translateY(30px);
@@ -1280,7 +1274,7 @@ input, textarea {
     transform: translateY(0);
 }
 
-/* ====== USER BUTTON STYLES ====== */
+/* ====== KIỂU NÚT NGƯỜI DÙNG ====== */
 .user-btn {
     position: relative;
     transition: var(--transition);
@@ -1331,7 +1325,7 @@ input, textarea {
     opacity: 0.9;
 }
 
-/* User button states */
+/* TRẠNG THÁI NÚT NGƯỜI DÙNG */
 .icon-btn.user-btn {
     position: relative;
     stroke-width: 2.5;
@@ -1352,7 +1346,7 @@ input, textarea {
     stroke: var(--white);
 }
 
-/* ====== USER DROPDOWN - MỚI ====== */
+/* ====== MENU THẢ XUỐNG NGƯỜI DÙNG ====== */
 .icon-btn.user-btn {
     position: relative;
 }
@@ -1367,7 +1361,7 @@ input, textarea {
     transform: rotate(180deg);
 }
 
-/* Dropdown container */
+/* CONTAINER MENU THẢ XUỐNG */
 .user-dropdown {
     position: absolute;
     top: calc(100% + 12px);
@@ -1380,7 +1374,7 @@ input, textarea {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
+    z-index: 1100;
     overflow: hidden;
 }
 
@@ -1390,7 +1384,7 @@ input, textarea {
     transform: translateY(0);
 }
 
-/* User info section */
+/* PHẦN THÔNG TIN NGƯỜI DÙNG */
 .user-info-section {
     padding: 20px;
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -1402,14 +1396,14 @@ input, textarea {
     font-weight: 600;
 }
 
-/* Divider */
+/* ĐƯỜNG PHÂN CHIA */
 .dropdown-divider {
     height: 1px;
     background: var(--gray-light);
     margin: 0;
 }
 
-/* Dropdown items */
+/* MỤC MENU THẢ XUỐNG */
 .dropdown-item {
     display: flex;
     align-items: center;
@@ -1430,7 +1424,7 @@ input, textarea {
     flex-shrink: 0;
 }
 
-/* Logout item - màu đỏ */
+/* MỤC ĐĂNG XUẤT - MÀU ĐỎ */
 .dropdown-item.logout-item {
     color: #d32f2f;
 }
@@ -1438,4 +1432,244 @@ input, textarea {
 .dropdown-item.logout-item:hover {
     background: #ffebee;
     color: #c62828;
+}
+
+/* ============================================
+   CHAT SUPPORT WIDGET
+   ============================================ */
+
+.chat-support {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 10000;
+}
+
+/* Nút mở chat */
+.chat-toggle-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3A7D44, #8B7355);
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-toggle-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(58, 125, 68, 0.5);
+}
+
+.chat-toggle-btn.active {
+    transform: scale(0.9);
+}
+
+/* Khung chat */
+.chat-box {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 350px;
+    max-width: 90vw;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow-xl);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.chat-box.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+/* Chat Header */
+.chat-header {
+    background: linear-gradient(135deg, #2D5016, #3A7D44);
+    color: var(--white);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+.chat-avatar {
+    width: 45px;
+    height: 45px;
+    background: var(--white);
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.chat-close {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Chat Messages */
+.chat-messages {
+    padding: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.chat-message {
+    margin-bottom: 15px;
+    animation: messageSlide 0.3s ease;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-message.received p {
+    background: var(--white);
+    color: var(--text-color);
+    padding: 12px 16px;
+    border-radius: 15px 15px 15px 5px;
+    display: inline-block;
+    max-width: 85%;
+    margin: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    line-height: 1.5;
+}
+
+.chat-message.sent p {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 12px 16px;
+    border-radius: 15px 15px 5px 15px;
+    display: inline-block;
+    max-width: 85%;
+    margin: 0 0 0 auto;
+    clear: both;
+    line-height: 1.5;
+}
+
+/* Chat Input */
+.chat-input {
+    padding: 15px 20px;
+    background: var(--white);
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+.chat-input input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.chat-input button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-input button:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+/* Chat Footer */
+.chat-footer {
+    padding: 12px 20px;
+    background: var(--white);
+    border-radius: 0 0 20px 20px;
+    text-align: center;
+}
+
+.chat-footer small {
+    color: var(--text-light);
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.chat-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.chat-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Scrollbar cho chat messages */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }

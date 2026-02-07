@@ -1,35 +1,33 @@
-/* ========================================
-   AUTH SYSTEM - JAVASCRIPT (Phiên bản cải tiến)
-   Quản lý đăng nhập, đăng ký với LocalStorage/JSON
-======================================== */
+/* HỆ THỐNG XÁC THỰC - JAVASCRIPT
+   Quản lý đăng nhập, đăng ký và toast
+*/
 
 // ========================================
-// CONFIGURATION
+// CẤU HÌNH
 // ========================================
 
 const CONFIG = {
-    // Chế độ lưu trữ: 'localStorage' hoặc 'json'
-    storageMode: 'localStorage', // Đổi thành 'json' khi có backend
-    apiEndpoint: '/api/auth', // Endpoint cho chế độ JSON
-    dataPath: './data/users.json' // Đường dẫn file JSON
+    storageMode: 'supabase',
+    apiEndpoint: null,
+    dataPath: null
 };
 
 // ========================================
-// UTILITIES & HELPERS
+// TIỆN ÍCH & HÀM HỖ TRỢ
 // ========================================
 
-// Validate email format
+// Dùng regex để xác nhận có dạng "chuỗi@chuỗi.đuôi"
 const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 };
 
-// Validate password strength
+// Kiểm tra chiều dài >= 8.
 const isValidPassword = (password) => {
     return password.length >= 8;
 };
 
-// Show error message
+// Hiển thị lỗi cho input.
 const showError = (input, message) => {
     const formGroup = input.closest('.form-group');
     const errorElement = formGroup.querySelector('.error-message');
@@ -39,7 +37,7 @@ const showError = (input, message) => {
     errorElement.classList.add('show');
 };
 
-// Clear error message
+// Xóa lỗi trên input.
 const clearError = (input) => {
     const formGroup = input.closest('.form-group');
     const errorElement = formGroup.querySelector('.error-message');
@@ -49,7 +47,7 @@ const clearError = (input) => {
     errorElement.classList.remove('show');
 };
 
-// Show loading state on button
+// Thiết lập trạng thái loading cho button.
 const setButtonLoading = (button, isLoading) => {
     if (isLoading) {
         button.classList.add('loading');
@@ -61,9 +59,10 @@ const setButtonLoading = (button, isLoading) => {
 };
 
 // ========================================
-// TOAST NOTIFICATION SYSTEM
+// THÔNG BÁO TOAST
 // ========================================
 
+// Toast.init
 const Toast = {
     container: null,
     
@@ -78,6 +77,9 @@ const Toast = {
     },
     
     // Hiển thị toast thông báo
+    // 1) Tạo phần tử toast với icon + message + close button
+    // 2) Thêm vào container, bật animation (thêm class 'show')
+    // 3) Sau duration: tắt animation rồi remove phần tử
     show: (message, type = 'success', duration = 3000) => {
         Toast.init();
         
@@ -117,12 +119,12 @@ const Toast = {
         // Thêm vào container
         Toast.container.appendChild(toast);
         
-        // Animation hiển thị
+
+
         setTimeout(() => {
             toast.classList.add('show');
         }, 10);
         
-        // Tự động ẩn sau duration
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => {
@@ -139,34 +141,38 @@ const Toast = {
 };
 
 // ========================================
-// STORAGE ABSTRACTION LAYER
+// LƯU THÔNG TIN NGƯỜI DÙNG (localSTORAGE)
 // ========================================
 
+// Khi dùng Supabase, các hàm local bị vô hiệu hóa.
+// Khi dùng JSON server, các phương thức fetch dữ liệu qua API endpoint.
 const Storage = {
-    // ===== LocalStorage Methods =====
-    
-    _getFromLocalStorage: () => {
-        const users = localStorage.getItem('auth_users');
-        return users ? JSON.parse(users) : [];
+    // KHÔNG DÙNG STORAGE KHI DÙNG SUPABASE
+    getUsers: async () => {
+        if (CONFIG.storageMode === 'supabase') {
+            console.warn('⚠️ Storage.getUsers() bị vô hiệu khi dùng Supabase');
+            return [];
+        }
+        return Storage._getFromLocalStorage();
     },
-    
-    _saveToLocalStorage: (users) => {
-        localStorage.setItem('auth_users', JSON.stringify(users));
+
+    saveUser: async () => {
+        if (CONFIG.storageMode === 'supabase') {
+            console.warn('⚠️ Storage.saveUser() bị vô hiệu khi dùng Supabase');
+            return;
+        }
     },
-    
-    _findUserInLocalStorage: (email) => {
-        const users = Storage._getFromLocalStorage();
-        return users.find(user => user.email.toLowerCase() === email.toLowerCase());
+
+    findUserByEmail: async () => {
+        if (CONFIG.storageMode === 'supabase') {
+            console.warn('⚠️ Storage.findUserByEmail() bị vô hiệu khi dùng Supabase');
+            return null;
+        }
     },
+
+
     
-    _addUserToLocalStorage: (user) => {
-        const users = Storage._getFromLocalStorage();
-        users.push(user);
-        Storage._saveToLocalStorage(users);
-    },
-    
-    // ===== JSON File Methods =====
-    
+    // Lấy users từ endpoint GET /users
     _getFromJSON: async () => {
         try {
             const response = await fetch(`${CONFIG.apiEndpoint}/users`, {
@@ -189,6 +195,7 @@ const Storage = {
         }
     },
     
+    // Lưu users bằng POST /users
     _saveToJSON: async (users) => {
         try {
             const response = await fetch(`${CONFIG.apiEndpoint}/users`, {
@@ -211,6 +218,7 @@ const Storage = {
         }
     },
     
+    // Tìm user bằng API POST /find-user
     _findUserInJSON: async (email) => {
         try {
             const response = await fetch(`${CONFIG.apiEndpoint}/find-user`, {
@@ -233,6 +241,7 @@ const Storage = {
         }
     },
     
+    // Thêm user qua POST /register
     _addUserToJSON: async (user) => {
         try {
             const response = await fetch(`${CONFIG.apiEndpoint}/register`, {
@@ -254,57 +263,86 @@ const Storage = {
             throw error;
         }
     },
-    
-    // ===== Unified Interface =====
-    
-    // Lấy tất cả users
-    getUsers: async () => {
-        if (CONFIG.storageMode === 'localStorage') {
-            return Storage._getFromLocalStorage();
-        } else {
-            return await Storage._getFromJSON();
-        }
-    },
-    
-    // Lưu user mới
-    saveUser: async (user) => {
-        if (CONFIG.storageMode === 'localStorage') {
-            Storage._addUserToLocalStorage(user);
-            return { success: true };
-        } else {
-            return await Storage._addUserToJSON(user);
-        }
-    },
-    
-    // Tìm user theo email
-    findUserByEmail: async (email) => {
-        if (CONFIG.storageMode === 'localStorage') {
-            return Storage._findUserInLocalStorage(email);
-        } else {
-            return await Storage._findUserInJSON(email);
-        }
-    },
-    
-    // Lưu user hiện tại (luôn dùng localStorage để giữ session)
-    setCurrentUser: (user) => {
-        localStorage.setItem('current_user', JSON.stringify(user));
-    },
-    
-    // Lấy user hiện tại
-    getCurrentUser: () => {
-        const user = localStorage.getItem('current_user');
-        return user ? JSON.parse(user) : null;
-    },
-    
-    // Đăng xuất
-    logout: () => {
-        localStorage.removeItem('current_user');
-        Toast.info('Đã đăng xuất thành công');
-    }
 };
 
 // ========================================
-// FORM SWITCHING
+// HỆ THỐNG SUPABASE
+// ========================================
+
+// Mỗi phương thức trả về object hoặc ném lỗi để caller xử lý.
+const SupabaseAuth = {
+    // Đăng ký
+    // xử lý error và trả về { success, user/message }.
+    register: async (email, password, options = {}) => {
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: options.data || {} 
+                }
+            });
+
+            if (error) {
+                console.error('❌ Supabase register error:', error);
+                return {
+                    success: false,
+                    message: error.message === 'User already registered' 
+                        ? 'Email đã được đăng ký' 
+                        : 'Đăng ký thất bại'
+                };
+            }
+
+            console.log('✅ Đăng ký thành công:', data);
+
+            return {
+                success: true,
+                user: data.user
+            };
+        } catch (error) {
+            console.error('❌ Lỗi không mong đợi:', error);
+            return {
+                success: false,
+                message: 'Có lỗi xảy ra'
+            };
+        }
+    },
+
+    // Đăng nhập
+    // Gọi signInWithPassword, trả về user hoặc ném lỗi.
+    login: async (email, password) => {
+        try {
+            const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                throw error;
+            }
+            
+            return data.user;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Lấy user hiện tại
+    // supabaseClient.auth.getUser() và trả về data.user hoặc null
+    currentUser: async () => {
+        const { data } = await supabaseClient.auth.getUser();
+        return data?.user || null;
+    },
+
+    // Logout
+    logout: async () => {
+        await supabaseClient.auth.signOut();
+    }
+};
+
+
+// ========================================
+// CHUYỂN ĐỔI FORM (FORM SWITCHING)
 // ========================================
 
 const FormSwitcher = {
@@ -343,9 +381,8 @@ const FormSwitcher = {
         const successText = FormSwitcher.successMessage.querySelector('.success-text');
         successText.textContent = message;
         
-        // Chuyển thẳng vào trang web bán hàng sau 2 giây
+        // Chuyển thẳng vào trang web sau 2 giây
         setTimeout(() => {
-            // Thay đổi 'index.html' thành tên file trang chủ của bạn
             window.location.href = 'index.html';
         }, 2000);
     },
@@ -358,9 +395,10 @@ const FormSwitcher = {
 };
 
 // ========================================
-// PASSWORD TOGGLE
+// CHUYỂN ẨN/HIỆN MẬT KHẨU (PASSWORD TOGGLE)
 // ========================================
 
+// Đổi thuộc tính type của input giữa 'password' và 'text', đồng thời thay icon tương ứng.
 const initPasswordToggle = () => {
     const toggleButtons = document.querySelectorAll('.toggle-password');
     
@@ -391,9 +429,11 @@ const initPasswordToggle = () => {
 };
 
 // ========================================
-// LOGIN HANDLER
+// XỬ LÝ ĐĂNG NHẬP (LOGIN HANDLER)
 // ========================================
 
+// LoginHandler.validate:
+// Check email và password, cập nhật lỗi tương ứng, trả về boolean.
 const LoginHandler = {
     form: document.getElementById('login-form'),
     emailInput: document.getElementById('login-email'),
@@ -428,6 +468,10 @@ const LoginHandler = {
     },
     
     // Handle login submission
+    // 1) preventDefault, validate form
+    // 2) bật loading, gọi SupabaseAuth.login
+    // 3) nếu thành công: lưu vào localStorage, show toast, redirect
+    // 4) nếu lỗi: phân tích error.message để hiển thị thông báo phù hợp
     submit: async (e) => {
         e.preventDefault();
         
@@ -438,49 +482,29 @@ const LoginHandler = {
         const submitButton = LoginHandler.form.querySelector('.btn-primary');
         setButtonLoading(submitButton, true);
         
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
         const email = LoginHandler.emailInput.value.trim();
         const password = LoginHandler.passwordInput.value;
         
         try {
-            // Tìm user
-            const user = await Storage.findUserByEmail(email);
-            
+            // Check user
+            const user = await SupabaseAuth.login(email, password);
+
             if (!user) {
-                setButtonLoading(submitButton, false);
-                showError(LoginHandler.emailInput, 'Email chưa được đăng ký');
-                Toast.error('Email chưa được đăng ký');
-                return;
+                throw new Error('Đăng nhập thất bại');
             }
-            
-            // Kiểm tra mật khẩu
-            if (user.password !== password) {
-                setButtonLoading(submitButton, false);
-                showError(LoginHandler.passwordInput, 'Mật khẩu không chính xác');
-                Toast.error('Mật khẩu không chính xác');
-                return;
-            }
-            
-            // Đăng nhập thành công
-            Storage.setCurrentUser(user);
+
             setButtonLoading(submitButton, false);
-            
-            // Hiển thị thông báo thành công
-            Toast.success(`Chào mừng trở lại, ${user.name}! 🎉`, 4000);
-            
-            // Hiển thị màn hình success
-            FormSwitcher.showSuccess(`Đăng nhập thành công! Chào mừng trở lại, ${user.name}! 🌿`);
-            
-            console.log('✅ Đăng nhập thành công:', user);
-            
-            // Lưu thông tin user vào teaUser để main.js đọc được
+
             localStorage.setItem('teaUser', JSON.stringify({
                 id: user.id,
-                name: user.name,
-                email: user.email
+                email: user.email,
+                name: user.user_metadata?.name || 'Người dùng',
+                loginAt: Date.now()
             }));
+
+            Toast.success('Đăng nhập thành công 🎉', 3000);
+
+            FormSwitcher.showSuccess('Chào mừng bạn quay trở lại 🌿');
 
             // Redirect về trang chủ sau 1.5 giây
             setTimeout(() => {
@@ -491,6 +515,22 @@ const LoginHandler = {
             console.error('❌ Lỗi đăng nhập:', error);
             setButtonLoading(submitButton, false);
             Toast.error('Có lỗi xảy ra. Vui lòng thử lại!');
+
+            // Phân tích lỗi dựa trên error.message từ Supabase
+            let errorMessage = 'Có lỗi xảy ra. Vui lòng thử lại!';
+            
+            if (error.message === 'Invalid login credentials') {
+                errorMessage = 'Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại!';
+            } else if (error.message.includes('Email not confirmed')) {
+                errorMessage = 'Email chưa được xác nhận. Vui lòng kiểm tra hộp thư';
+            } else if (error.message.includes('not found')) {
+                errorMessage = 'Email này chưa được đăng ký';
+            } else if (error.message.includes('Too many requests')) {
+                errorMessage = 'Quá nhiều lần thử. Vui lòng đợi một chút';
+            }
+            
+            Toast.error(errorMessage, 4000);
+
         }
     }
 
@@ -498,15 +538,19 @@ const LoginHandler = {
 };
 
 // ========================================
-// REGISTER HANDLER
+// XỬ LÝ ĐĂNG KÝ (REGISTER HANDLER)
 // ========================================
 
+// validate: Check name, email, password, confirm.
+// Submit: call SupabaseAuth.register với user_metadata.name,
+// xử lý kết quả, hiển thị toast và chuyển sang success.
 const RegisterHandler = {
     form: document.getElementById('register-form'),
     nameInput: document.getElementById('register-name'),
     emailInput: document.getElementById('register-email'),
     passwordInput: document.getElementById('register-password'),
     confirmPasswordInput: document.getElementById('register-confirm-password'),
+    submitBtn: document.querySelector('#register-form .btn-primary'),
     
     // Validate register form
     validate: async () => {
@@ -533,14 +577,7 @@ const RegisterHandler = {
             showError(RegisterHandler.emailInput, 'Email không hợp lệ');
             isValid = false;
         } else {
-            // Kiểm tra email đã tồn tại
-            const existingUser = await Storage.findUserByEmail(email);
-            if (existingUser) {
-                showError(RegisterHandler.emailInput, 'Email đã được đăng ký');
-                isValid = false;
-            } else {
-                clearError(RegisterHandler.emailInput);
-            }
+            clearError(RegisterHandler.emailInput);
         }
         
         // Validate password
@@ -574,54 +611,68 @@ const RegisterHandler = {
     submit: async (e) => {
         e.preventDefault();
         
-        const isValid = await RegisterHandler.validate();
-        if (!isValid) {
-            return;
+        const name = RegisterHandler.nameInput.value.trim();
+        const email = RegisterHandler.emailInput.value.trim();
+        const password = RegisterHandler.passwordInput.value;
+        const confirmPassword = RegisterHandler.confirmPasswordInput.value;
+        
+        // Validation
+        let hasError = false;
+        
+        if (!name || name.length < 2) {
+            showError(RegisterHandler.nameInput, 'Vui lòng nhập họ tên (tối thiểu 2 ký tự)');
+            hasError = true;
         }
         
-        const submitButton = RegisterHandler.form.querySelector('.btn-primary');
+        if (!email || !isValidEmail(email)) {
+            showError(RegisterHandler.emailInput, 'Email không hợp lệ');
+            hasError = true;
+        }
+        
+        if (!password || !isValidPassword(password)) {
+            showError(RegisterHandler.passwordInput, 'Mật khẩu phải có ít nhất 8 ký tự');
+            hasError = true;
+        }
+        
+        if (password !== confirmPassword) {
+            showError(RegisterHandler.confirmPasswordInput, 'Mật khẩu không khớp');
+            hasError = true;
+        }
+        
+        if (hasError) return;
+        
+        const submitButton = RegisterHandler.form.querySelector('.btn-primary'); 
         setButtonLoading(submitButton, true);
         
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        const newUser = {
-            id: Date.now().toString(),
-            name: RegisterHandler.nameInput.value.trim(),
-            email: RegisterHandler.emailInput.value.trim().toLowerCase(),
-            password: RegisterHandler.passwordInput.value,
-            createdAt: new Date().toISOString()
-        };
-        
         try {
-            // Lưu user
-            await Storage.saveUser(newUser);
+            const result = await SupabaseAuth.register(email, password, {
+                data: {
+                    name: name 
+                }
+            });
             
-            setButtonLoading(submitButton, false);
-            
-            // Hiển thị thông báo thành công
-            Toast.success(`Đăng ký thành công! Chào mừng ${newUser.name} 🎉`, 4000);
-            
-            // Hiển thị màn hình success
-            FormSwitcher.showSuccess(
-                `Tài khoản của bạn đã được tạo thành công! Chào mừng ${newUser.name} đến với Green Tea 🌿`
-            );
-            
-            console.log('✅ Đăng ký thành công:', newUser);
-            console.log(`📁 Dữ liệu đã được lưu vào: ${CONFIG.dataPath}`);
-            
+            if (result.success) {
+                Toast.success(`Đăng ký thành công! Chào mừng ${name} đến với TeaVerse 🎉`);
+                RegisterHandler.form.reset();
+                FormSwitcher.showSuccess(`Đăng ký thành công! Chào mừng ${name} đến với TeaVerse`);
+            } else {
+                Toast.error(result.message || 'Đăng ký thất bại');
+            }
         } catch (error) {
             console.error('❌ Lỗi đăng ký:', error);
+            Toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } finally {
+            const submitButton = RegisterHandler.form.querySelector('.btn-primary');
             setButtonLoading(submitButton, false);
-            Toast.error(error.message || 'Có lỗi xảy ra. Vui lòng thử lại!');
         }
     }
 };
 
 // ========================================
-// INPUT VALIDATION ON BLUR
+// VALIDATION KHI MẤT FOCUS (ON BLUR)
 // ========================================
 
+// Gắn sự kiện 'blur' cho các input chính để kiểm tra tức thì, và 'input' để xóa lỗi khi người dùng bắt đầu gõ lại.
 const initInputValidation = () => {
     // Login form inputs
     LoginHandler.emailInput.addEventListener('blur', () => {
@@ -683,9 +734,10 @@ const initInputValidation = () => {
 };
 
 // ========================================
-// EVENT LISTENERS
+// SỰ KIỆN CHUNG (EVENT LISTENERS)
 // ========================================
 
+// Gắn submit handlers, link chuyển form, back to login, forgot password.
 const initEventListeners = () => {
     // Form submissions
     LoginHandler.form.addEventListener('submit', LoginHandler.submit);
@@ -714,7 +766,7 @@ const initEventListeners = () => {
         });
     }
     
-    // Forgot password link (placeholder)
+    // Forgot password link (Cập nhật sau)
     const forgotLink = document.querySelector('.forgot-link');
     if (forgotLink) {
         forgotLink.addEventListener('click', (e) => {
@@ -725,23 +777,23 @@ const initEventListeners = () => {
 };
 
 // ========================================
-// CHECK LOGIN STATUS
+// KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
 // ========================================
 
-const checkLoginStatus = () => {
-    const currentUser = Storage.getCurrentUser();
-    if (currentUser) {
-        console.log('✅ User đang đăng nhập:', currentUser);
+// Call SupabaseAuth.currentUser(), nếu có user thì ghi log/redirect tùy ứng dụng.
+const checkLoginStatus = async () => {
+    const user = await SupabaseAuth.currentUser();
+    if (user) {
+        console.log('✅ User đang đăng nhập:', user);
         console.log(`📁 Chế độ lưu trữ: ${CONFIG.storageMode}`);
-        // Trong app thực tế, redirect đến dashboard
-        // window.location.href = '/dashboard';
     }
 };
 
 // ========================================
-// INITIALIZATION
+// KHỞI TẠO (INITIALIZATION)
 // ========================================
 
+// Khi DOMContentLoaded -> init toast, toggle, validation, sự kiện, check login.
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🌿 Green Tea Auth System Initialized');
     console.log(`📁 Storage Mode: ${CONFIG.storageMode}`);
@@ -754,19 +806,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     checkLoginStatus();
     
-    // Demo: Log current users
-    Storage.getUsers().then(users => {
-        console.log(`👥 Tổng số users: ${users.length}`);
-        if (users.length > 0) {
-            console.log('Users:', users);
-        }
-    });
+    // Log current users
+    if (CONFIG.storageMode !== 'supabase') {
+        Storage.getUsers().then(users => {
+            console.log(`👥 Tổng số users: ${users.length}`);
+            if (users.length > 0) {
+                console.log('Users:', users);
+            }
+        });
+    }
 });
 
 // ========================================
-// DESKTOP PANEL TOGGLE
+// CHUYỂN PANEL TRÊN MÁY TÍNH (DESKTOP PANEL TOGGLE)
 // ========================================
 
+// Quản lý trạng thái currentMode và isAnimating để prevent bấm nhanh, ẩn/hiện form với delay để tạo hiệu ứng, thay đổi văn bản chào mừng.
 const panelContainer = document.getElementById('panelContainer');
 const panelToggleBtn = document.getElementById('panelToggleBtn');
 const welcomeTitle = document.getElementById('welcomeTitle');
@@ -838,6 +893,7 @@ if (panelToggleBtn) {
 // ĐỒNG BỘ FORM SWITCHER VỚI PANEL
 // ========================================
 
+// Ghi đè FormSwitcher.showLogin/showRegister để đồng bộ class panel và văn bản.
 const originalShowLogin = FormSwitcher.showLogin;
 FormSwitcher.showLogin = function() {
     originalShowLogin.call(this);
@@ -872,6 +928,7 @@ FormSwitcher.showRegister = function() {
 // XỬ LÝ RESPONSIVE
 // ========================================
 
+// Ưhen resize < 769px, đảm bảo panel không ở trạng thái slide-left.
 window.addEventListener('resize', () => {
     if (window.innerWidth < 769 && panelContainer) {
         panelContainer.classList.remove('slide-left');

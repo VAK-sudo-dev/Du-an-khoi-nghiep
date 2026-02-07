@@ -2,7 +2,7 @@
    TEAVERSE - MAIN JAVASCRIPT
    Website functionality & interactions
    ============================================ */
-
+   
 // ====== GLOBAL STATE ======
 let cart = [];
 let currentFilter = 'all';
@@ -11,9 +11,9 @@ let isLoggedIn = false; // Thêm state đăng nhập
 let currentUser = null; // Thông tin user
 
 // ====== INITIALIZATION ======
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     initCart();
-    initAuth();
+    await initAuth();
     renderProducts();
     initEventListeners();
     initScrollAnimations();
@@ -150,13 +150,13 @@ function renderProducts(filter = 'all') {
 
     productsGrid.innerHTML = productsToShow.map(product => `
         <div class="product-card fade-in" data-category="${product.category}">
-            <div class="product-image">
+            <div class="product-image" onclick="goToProductDetail(${product.id})" style="cursor: pointer;">
                 <img src="${product.image}" alt="${product.name}">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
             </div>
             <div class="product-content">
                 <div class="product-category">${getCategoryName(product.category)}</div>
-                <h3 class="product-name">${product.name}</h3>
+                <h3 class="product-name" onclick="goToProductDetail(${product.id})" style="cursor: pointer;">${product.name}</h3>
                 <p class="product-description">${product.description}</p>
                 <div class="product-footer">
                     <div class="product-price">${formatPrice(product.price)}</div>
@@ -256,6 +256,48 @@ function initEventListeners() {
             header.classList.remove('scrolled');
         }
     });
+
+    // Active nav link khi scroll
+    function updateActiveNav() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        let currentSectionId = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            const sectionHeight = section.clientHeight;
+            
+            if (window.scrollY >= sectionTop && 
+                window.scrollY < sectionTop + sectionHeight) {
+                currentSectionId = section.id;
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentSectionId}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Gọi hàm khi scroll
+    window.addEventListener('scroll', () => {
+        // Header scroll effect (giữ nguyên)
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        // Cập nhật active nav
+        updateActiveNav();
+    });
+
+    // Gọi lần đầu khi load
+    setTimeout(updateActiveNav, 100);
 
     // Hamburger menu
     const hamburger = document.getElementById('hamburger');
@@ -599,14 +641,32 @@ function isInViewport(element) {
 }
 
 // ====== AUTH MANAGEMENT ======
-function initAuth() {
-    const savedUser = localStorage.getItem('teaUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        isLoggedIn = true;
+async function initAuth() {
+    const { data } = await supabaseClient.auth.getUser();
+
+    if (!data?.user) {
+        isLoggedIn = false;
+        currentUser = null;
         updateUserUI();
+        return;
     }
+
+    const user = data.user;
+
+    currentUser = {
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.name || 'Người dùng'
+    };
+
+    isLoggedIn = true;
+
+    // Đồng bộ lại localStorage
+    localStorage.setItem('teaUser', JSON.stringify(currentUser));
+
+    updateUserUI();
 }
+
 
 function loginUser(userData) {
     currentUser = userData;
@@ -646,7 +706,73 @@ function updateUserUI() {
 }
 
 
+// ============================================
+// CHAT SUPPORT WIDGET
+// ============================================
+
+const chatToggleBtn = document.getElementById('chatToggleBtn');
+const chatBox = document.getElementById('chatBox');
+const chatClose = document.getElementById('chatClose');
+
+// Mở/đóng chat box
+chatToggleBtn.addEventListener('click', () => {
+    chatBox.classList.toggle('active');
+    chatToggleBtn.classList.toggle('active');
+});
+
+// Đóng chat khi click nút close
+chatClose.addEventListener('click', () => {
+    chatBox.classList.remove('active');
+    chatToggleBtn.classList.remove('active');
+});
+
+// Đóng chat khi click bên ngoài
+document.addEventListener('click', (e) => {
+    if (!chatToggleBtn.contains(e.target) && !chatBox.contains(e.target)) {
+        chatBox.classList.remove('active');
+        chatToggleBtn.classList.remove('active');
+    }
+});
+
+// Xử lý gửi tin nhắn (optional)
+const chatInput = document.querySelector('.chat-input input');
+const chatSendBtn = document.querySelector('.chat-input button');
+const chatMessages = document.querySelector('.chat-messages');
+
+function sendMessage() {
+    const message = chatInput.value.trim();
+    if (message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message sent';
+        messageDiv.innerHTML = `<p>${message}</p>`;
+        chatMessages.appendChild(messageDiv);
+        chatInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+chatSendBtn.addEventListener('click', sendMessage);
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
 // ====== CONSOLE LOG ======
 console.log('%c🍃 TeaVerse Website', 'color: #2D5016; font-size: 20px; font-weight: bold;');
 console.log('%cWebsite bán trà cao cấp - Thiết kế hiện đại, tối giản', 'color: #3A7D44; font-size: 14px;');
 console.log('%cPhát triển bởi VAK', 'color: #6FBF73; font-size: 12px;');
+// ====== PRODUCT DETAIL NAVIGATION ======
+function goToProductDetail(productId) {
+    // Map product IDs to their detail page URLs
+    const productUrls = {
+        1: 'products/tra-phu-hoi/index.html'
+        // Thêm các sản phẩm khác ở đây sau
+    };
+    
+    const url = productUrls[productId];
+    if (url) {
+        window.location.href = url;
+    }
+}
+

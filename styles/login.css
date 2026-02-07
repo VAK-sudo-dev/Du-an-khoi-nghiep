@@ -476,7 +476,6 @@ body {
     display: none;
 }
 
-/* Căn giữa success message và ẨN HẾT MỌI THỨ */
 .success-message:not(.hidden) {
     position: fixed;
     top: 50%;
@@ -491,22 +490,18 @@ body {
     box-shadow: var(--shadow-xl);
 }
 
-/* Ẩn toàn bộ panel container */
 .success-message:not(.hidden) ~ .panel-container {
     display: none !important;
 }
 
-/* Làm mờ background */
 body:has(.success-message:not(.hidden)) .container {
     background: rgba(245, 247, 246, 0.95);
 }
 
-/* Ẩn background circles */
 body:has(.success-message:not(.hidden)) .bg-circle {
     opacity: 0 !important;
 }
 
-/* Ẩn brand */
 .success-message:not(.hidden) ~ * {
     opacity: 0;
 }
@@ -640,7 +635,6 @@ body:has(.success-message:not(.hidden)) .bg-circle {
     }
 }
 
-/* Focus Visible for Keyboard Navigation */
 *:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
@@ -651,10 +645,10 @@ body:has(.success-message:not(.hidden)) .bg-circle {
 ======================================== */
 @media (min-width: 769px) {
     .auth-card {
-        max-width: 1000px; /* Tăng từ 900px lên 1000px */
+        max-width: 1000px;
         padding: 0;
         display: flex;
-        min-height: 600px; /* Tăng chiều cao để thoải mái hơn */
+        min-height: 600px; 
         overflow: hidden;
         position: relative;
     }
@@ -667,7 +661,7 @@ body:has(.success-message:not(.hidden)) .bg-circle {
         transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
-    /* Welcome Panel (Purple) */
+    /* Welcome Panel */
     .welcome-panel {
         flex: 1;
         background: linear-gradient(135deg, #40d072ea 0%, #45d86ab2 100%);
@@ -738,7 +732,7 @@ body:has(.success-message:not(.hidden)) .bg-circle {
         transform: scale(1.05);
     }
 
-    /* Form Panel (White) */
+    /* Form Panel */
     .form-panel {
         flex: 1;
         padding: 2rem;
@@ -760,7 +754,7 @@ body:has(.success-message:not(.hidden)) .bg-circle {
         display: flex;
         gap: 0.75rem;
         justify-content: center;
-        margin-bottom: 0.75rem; /* Giảm từ 1rem */
+        margin-bottom: 0.75rem; 
     }
 
     .social-btn {
@@ -791,7 +785,7 @@ body:has(.success-message:not(.hidden)) .bg-circle {
         text-align: center;
         font-size: 0.85rem;
         color: #9CA3AF;
-        margin-bottom: 1rem; /* Giảm từ 1.5rem */
+        margin-bottom: 1rem; 
     }
 
     /* Adjust form styles for desktop */
@@ -810,7 +804,7 @@ body:has(.success-message:not(.hidden)) .bg-circle {
     }
 
     .form-header {
-        margin-bottom: 1.25rem; /* Giảm từ 1.5rem */
+        margin-bottom: 1.25rem;
         text-align: center;
     }
 
@@ -819,24 +813,22 @@ body:has(.success-message:not(.hidden)) .bg-circle {
     }
 
     .form-subtitle {
-        display: none; /* Hide subtitle on desktop */
+        display: none; 
     }
 
     .form-footer {
-        display: none; /* Hide footer toggle on desktop */
+        display: none; 
     }
 
     /* ========================================
        ANIMATION MỚI - SMOOTH SLIDE EFFECT
     ======================================== */
 
-    /* Panel Container - Relative position */
     .panel-container {
         position: relative;
         overflow: hidden;
     }
 
-    /* Form Panel - Slide với transform */
     .form-panel {
         position: absolute;
         top: 0;
@@ -849,7 +841,6 @@ body:has(.success-message:not(.hidden)) .bg-circle {
         z-index: 2;
     }
 
-    /* Welcome Panel - Slide với transform */
     .welcome-panel {
         position: absolute;
         top: 0;
@@ -865,7 +856,6 @@ body:has(.success-message:not(.hidden)) .bg-circle {
        ANIMATION KHI CHUYỂN ĐỔI
     ======================================== */
 
-    /* Khi slide-left: Panel slide mượt mà */
     .panel-container.slide-left .welcome-panel {
         transform: translateX(-100%); /* Slide sang trái */
     }
@@ -874,7 +864,6 @@ body:has(.success-message:not(.hidden)) .bg-circle {
         transform: translateX(100%); /* Slide sang phải */
     }
 
-    /* Fade animation cho form content bên trong */
     .form-container {
         opacity: 1;
         transform: scale(1);
@@ -888,23 +877,19 @@ body:has(.success-message:not(.hidden)) .bg-circle {
         pointer-events: none;
     }
 
-    /* Form groups spacing for desktop */
     .form-group {
-        margin-bottom: 0.75rem; /* Giảm khoảng cách */
+        margin-bottom: 0.75rem;
     }
 
-    /* Button spacing */
     .btn {
-        margin-top: 0.25rem; /* Giảm từ 0.5rem */
+        margin-top: 0.25rem;
     }
 }
 
-/* Ẩn welcome panel khi success message hiển thị */
 .auth-card .success-message:not(.hidden) ~ .panel-container .welcome-panel {
     display: none !important;
 }
 
-/* Căn giữa success message và mở rộng khi welcome panel ẩn */
 .success-message:not(.hidden) {
     position: absolute;
     top: 50%;
@@ -915,24 +900,74 @@ body:has(.success-message:not(.hidden)) .bg-circle {
     z-index: 10;
 }
 
-/* Ẩn panel container khi success message hiển thị */
 .auth-card .success-message:not(.hidden) ~ .panel-container {
     opacity: 0;
     pointer-events: none;
 }
 
-/* Hide welcome panel on mobile */
+
 @media (max-width: 768px) {
     .welcome-panel {
         display: none;
     }
     
     .social-login {
-        display: none;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .social-btn {
+        width: 100%;
+        height: 50px;
+        border: 1.5px solid #E0E0E0;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .social-btn:hover,
+    .social-btn:active {
+        border-color: var(--color-primary);
+        background: var(--color-accent);
+        transform: translateY(-2px);
+    }
+    
+    .social-btn svg {
+        width: 24px;
+        height: 24px;
     }
     
     .divider-text {
-        display: none;
+        text-align: center;
+        font-size: 0.875rem;
+        color: #9CA3AF;
+        margin: 1.5rem 0;
+        position: relative;
+        display: block;
+    }
+    
+    .divider-text::before,
+    .divider-text::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 35%;
+        height: 1px;
+        background: #E0E0E0;
+    }
+    
+    .divider-text::before {
+        left: 0;
+    }
+    
+    .divider-text::after {
+        right: 0;
     }
 }
 

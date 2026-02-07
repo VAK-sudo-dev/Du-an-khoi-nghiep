@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- CSS Files -->
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/responsive.css">
@@ -400,7 +402,50 @@
     <!-- Cart Overlay -->
     <div class="cart-overlay" id="cartOverlay"></div>
 
+    <!-- Chat Support Button & Box -->
+    <div class="chat-support">
+        <!-- Nút mở chat -->
+        <button class="chat-toggle-btn" id="chatToggleBtn">
+            <i class="fas fa-headset"></i>
+        </button>
+        
+        <!-- Khung chat -->
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <i class="fas fa-mug-hot"></i>
+                </div>
+                <h3>Tên shop</h3>
+                <button class="chat-close" id="chatClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-messages">
+                <div class="chat-message received">
+                    <p>Xin chào Anh/Chị! Em là trợ lý AI của Tên shop</p>
+                </div>
+                <div class="chat-message received">
+                    <p>Em rất sẵn lòng hỗ trợ Anh/Chị 😊</p>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" placeholder="Nhập tin nhắn...">
+                <button><i class="fas fa-paper-plane"></i></button>
+            </div>
+            
+            <div class="chat-footer">
+                <small>Thông tin chỉ mang tính tham khảo, được trợ vấn bởi <a href="#">Tự Tuệ Nhân Tạo</a></small>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Files -->
+     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2️⃣ Supabase config (tạo supabaseClient) -->
+    <script src="js/supabase-config.js"></script>
     <script src="data/products.js"></script>
     <script src="js/main.js"></script>
 </body>
