@@ -2,6 +2,65 @@
 // CHECKOUT PAGE JAVASCRIPT
 // ============================================
 
+// Hàm tạo mã đơn hàng unique
+function generateOrderId() {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    return `ORD${timestamp}${random}`;
+}
+
+// Hàm lấy tên phương thức thanh toán
+function getPaymentMethodName(value) {
+    const methods = {
+        'vietqr': 'VietQR',
+        'credit-card': 'Thẻ tín dụng/ghi nợ',
+        'cod': 'Thanh toán khi nhận hàng (COD)'
+    };
+    return methods[value] || value;
+}
+
+// Hàm tạo chuỗi tên sản phẩm từ giỏ hàng
+function getProductNamesString(cart) {
+    return cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
+}
+
+// Hàm tạo đơn hàng trong Supabase
+async function createOrderInSupabase(orderData) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('orders')
+            .insert([orderData])
+            .select();
+
+        if (error) {
+            console.error('Supabase error:', error);
+            throw error;
+        }
+
+        return data[0];
+    } catch (error) {
+        console.error('Error creating order:', error);
+        throw error;
+    }
+}
+
+// Hàm cập nhật trạng thái thanh toán
+async function updatePaymentStatus(orderId, paymentStatus) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('orders')
+            .update({ payment_status: paymentStatus })
+            .eq('order_code', orderId)
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    } catch (error) {
+        console.error('Error updating payment status:', error);
+        throw error;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const changeAddressBtn = document.getElementById('changeAddressBtn');
@@ -186,8 +245,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ====== CHECKOUT ======
     async function handleCheckout() {
+        // BƯỚC 1: Validate dữ liệu đầu vào
         if (cart.length === 0) {
             showToast('Giỏ hàng trống!', 'error');
+            return;
+        }
+
+        if (!isLoggedIn || !currentUser) {
+            showToast('Vui lòng đăng nhập để tiếp tục', 'error');
+            setTimeout(() => window.location.href = '../login.html', 1500);
             return;
         }
 
@@ -197,35 +263,128 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Show loading
+        // BƯỚC 2: Hiển thị trạng thái loading
         checkoutBtn.disabled = true;
         checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
 
         try {
-            // Simulate processing
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Calculate order total
+            // BƯỚC 3: Tính toán tổng tiền
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const total = subtotal; // Đã trừ phí ship
+            const shipping = 30000;
+            const discount = 30000;
+            const totalAmount = subtotal + shipping - discount;
 
-            // Clear cart
+            // BƯỚC 4: Tạo dữ liệu đơn hàng
+            const orderId = generateOrderId();
+            const productNames = getProductNamesString(cart);
+            const note = orderNote?.value || '';
+
+            const orderData = {
+                order_code: orderId,
+                product_name: productNames,
+                username: currentUser.name || currentUser.email.split('@')[0],
+                email: currentUser.email,
+                order_status: 'pending', // Trạng thái đơn hàng: pending, shipping, completed, cancelled
+                total_amount: totalAmount,
+                tracking_link: '', // Sẽ cập nhật sau khi có mã vận đơn
+                payment_method: getPaymentMethodName(paymentMethod),
+                payment_status: 'pending', // pending, paid, failed
+                note: note,
+            };
+
+            // BƯỚC 5: Lưu đơn hàng vào Supabase
+            console.log('Creating order with data:', orderData);
+            const createdOrder = await createOrderInSupabase(orderData);
+
+            if (!createdOrder) {
+                throw new Error('Không thể tạo đơn hàng');
+            }
+
+            console.log('Order created successfully:', createdOrder);
+
+            // BƯỚC 6: Xử lý theo phương thức thanh toán
+            if (paymentMethod === 'vietqr') {
+                // Chuyển sang trang thanh toán VietQR
+                await handleVietQRPayment(createdOrder);
+            } else if (paymentMethod === 'credit-card') {
+                // Chuyển sang trang thanh toán thẻ
+                await handleCreditCardPayment(createdOrder);
+            } else if (paymentMethod === 'cod') {
+                // COD - thanh toán khi nhận hàng
+                await handleCODPayment(createdOrder);
+            }
+
+            // BƯỚC 7: Xóa giỏ hàng và dữ liệu tạm
             localStorage.removeItem('teaCart');
             localStorage.removeItem('orderNote');
 
-            // Show success modal
-            showSuccessModal(total);
+            // BƯỚC 8: Hiển thị modal thành công
+            showSuccessModal(totalAmount, orderId, paymentMethod);
+
+            // BƯỚC 9: Cập nhật lại giỏ hàng (nếu có giỏ hàng global)
+            if (typeof updateCartCount === 'function') {
+                updateCartCount();
+            }
 
         } catch (error) {
             console.error('Checkout error:', error);
-            showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            showToast('Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.', 'error');
+            
+            // Reset button
             checkoutBtn.disabled = false;
             checkoutBtn.innerHTML = '<i class="fas fa-lock"></i> Thanh toán ngay';
         }
     }
 
+    // ====== XỬ LÝ THANH TOÁN THEO PHƯƠNG THỨC ======
+
+    // Thanh toán VietQR
+    async function handleVietQRPayment(order) {
+        // Simulate payment gateway processing
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Trong thực tế, bạn sẽ:
+        // 1. Tạo QR code với thông tin: số tài khoản, số tiền, nội dung
+        // 2. Redirect đến trang hiển thị QR
+        // 3. Webhook từ ngân hàng sẽ cập nhật payment_status = 'paid'
+        
+        console.log('VietQR payment initiated for order:', order.order_id);
+        
+        // Ví dụ redirect (uncomment khi có trang QR):
+        // window.location.href = `qr-payment.html?orderId=${order.order_id}&amount=${order.total_amount}`;
+    }
+
+    // Thanh toán thẻ tín dụng
+    async function handleCreditCardPayment(order) {
+        // Simulate payment gateway processing
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Trong thực tế, bạn sẽ tích hợp với payment gateway như:
+        // - Stripe
+        // - PayPal
+        // - OnePay
+        // - VNPay
+        
+        console.log('Credit card payment initiated for order:', order.order_id);
+        
+        // Ví dụ redirect (uncomment khi có payment gateway):
+        // window.location.href = `card-payment.html?orderId=${order.order_id}&amount=${order.total_amount}`;
+    }
+
+    // Thanh toán COD
+    async function handleCODPayment(order) {
+        // COD không cần xử lý thanh toán ngay
+        // payment_status sẽ giữ ở 'pending' cho đến khi giao hàng thành công
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        console.log('COD order created:', order.order_id);
+        
+        // Có thể gửi email xác nhận đơn hàng ở đây
+    }
+
     // ====== SUCCESS MODAL ======
-    function showSuccessModal(orderTotal) {
+    function showSuccessModal(orderTotal, orderId, paymentMethod) {
         // Create modal overlay
         const modalOverlay = document.createElement('div');
         modalOverlay.className = 'success-modal-overlay';
@@ -233,6 +392,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create modal
         const modal = document.createElement('div');
         modal.className = 'success-modal';
+        
+        // Lấy tên phương thức thanh toán
+        const paymentMethodName = getPaymentMethodName(paymentMethod);
+        
+        // Xác định trạng thái thanh toán
+        const paymentStatusText = paymentMethod === 'cod' 
+            ? 'Thanh toán khi nhận hàng' 
+            : 'Chờ thanh toán';
+        
+        const paymentStatusClass = paymentMethod === 'cod' 
+            ? 'status-pending' 
+            : 'status-pending';
+        
         modal.innerHTML = `
             <div class="success-modal-content">
                 <div class="success-icon-wrapper">
@@ -253,26 +425,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="order-info">
                     <div class="order-info-item">
                         <span class="label">Mã đơn hàng:</span>
-                        <span class="value">#${Date.now().toString().slice(-8)}</span>
+                        <span class="value" style="color: #2D5016; font-weight: 700;">#${orderId}</span>
                     </div>
                     <div class="order-info-item">
-                        <span class="label">Tổng tiền:</span>
+                        <span class="label">Phương thức thanh toán:</span>
+                        <span class="value">${paymentMethodName}</span>
+                    </div>
+                    <div class="order-info-item">
+                        <span class="label">Trạng thái thanh toán:</span>
+                        <span class="value">
+                            <span class="status-badge ${paymentStatusClass}" style="padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">
+                                ${paymentStatusText}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="order-info-item">
+                        <span class="label">Tổng thanh toán:</span>
                         <span class="value highlight">${formatPrice(orderTotal)}</span>
-                    </div>
-                    <div class="order-info-item">
-                        <span class="label">Phương thức:</span>
-                        <span class="value">${getPaymentMethodName()}</span>
                     </div>
                 </div>
                 
                 <div class="success-actions">
-                    <button class="btn-view-order" id="viewOrderBtn">
+                    <button class="btn-view-order" onclick="window.location.href='../dropdown/history/history.html'">
                         <i class="fas fa-receipt"></i>
                         Xem đơn hàng
                     </button>
-                    <button class="btn-continue-shopping" id="continueShoppingBtn">
+                    <button class="btn-continue-shopping" onclick="window.location.href='../index.html'">
                         <i class="fas fa-shopping-bag"></i>
-                        Tiếp tục mua hàng
+                        Tiếp tục mua sắm
                     </button>
                 </div>
             </div>
@@ -281,28 +461,18 @@ document.addEventListener('DOMContentLoaded', function() {
         modalOverlay.appendChild(modal);
         document.body.appendChild(modalOverlay);
         
-        // Prevent body scroll
-        document.body.style.overflow = 'hidden';
-        
-        // Trigger animations
+        // Trigger animation
         setTimeout(() => {
             modalOverlay.classList.add('show');
-            modal.classList.add('show');
-        }, 10);
-        
-        // Event listeners
-        document.getElementById('viewOrderBtn').addEventListener('click', () => {
-            window.location.href = 'dropdown/history/history.html';
-        });
-        
-        document.getElementById('continueShoppingBtn').addEventListener('click', () => {
-            window.location.href = '../index.html';
-        });
-        
+            setTimeout(() => modal.classList.add('show'), 100);
+        }, 100);
+
         // Close on overlay click
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
-                closeSuccessModal(modalOverlay);
+                modalOverlay.classList.remove('show');
+                modal.classList.remove('show');
+                setTimeout(() => modalOverlay.remove(), 300);
             }
         });
     }

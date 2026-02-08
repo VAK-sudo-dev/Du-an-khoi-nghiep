@@ -477,7 +477,7 @@ function initEventListeners() {
     if (ordersBtn) {
         ordersBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Chức năng Lịch sử đặt hàng - Đang phát triển');
+            window.location.href = 'dropdown/history/history.html';
             userDropdown.classList.remove('active');
         });
     }
