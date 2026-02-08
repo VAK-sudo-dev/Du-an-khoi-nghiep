@@ -3,6 +3,58 @@
    Website functionality & interactions
    ============================================ */
    
+// ====== CHATBOT CONFIGURATION ======
+const OPENROUTER_API_KEY = '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'; // Thay bằng key của bạn
+const MODEL = 'deepseek/deepseek-r1-0528';
+
+const SYSTEM_PROMPT = `Bạn là chuyên gia tư vấn trà của Trà Phú Hội- thương hiệu trà cao cấp Phú Hội, Việt Nam.
+
+PHONG CÁCH GIAO TIẾP:
+- Xưng hô: Em (bạn) - Anh/Chị (khách hàng)
+- Giọng điệu: Thân thiện, nhiệt tình, chuyên nghiệp nhưng gần gũi
+- Luôn dùng emoji phù hợp: 🍃 ☕ 😊 💚 ✨
+- Trả lời ngắn gọn, súc tích, dễ hiểu
+- Tạo cảm giác như đang chat với người thật, không máy móc
+
+SẢN PHẨM CỦA TEAVERSE:
+1. **Trà Xanh Phú Hội** - 200.000đ
+   - Tươi mát, thanh nhiệt
+   - Giàu chất chống oxy hóa
+   - Phù hợp uống hàng ngày
+
+CÔNG DỤNG TRÀ PHÚ HỘI:
+✨ Tăng cường sức khỏe, miễn dịch
+💪 Giảm stress, thư giãn tinh thần  
+🌟 Làm đẹp da, chống lão hóa
+☕ Thanh lọc cơ thể, detox tự nhiên
+💚 Cải thiện tiêu hóa
+
+THÔNG TIN LIÊN HỆ:
+📞 Hotline: 0798 130 810
+📧 Email: contact@teaverse.vn
+📍 Địa chỉ: Phú Hội, Việt Nam
+🚚 Giao hàng toàn quốc
+
+CÁCH ĐẶT HÀNG:
+1. Chọn sản phẩm trên website
+2. Thêm vào giỏ hàng  
+3. Thanh toán online hoặc COD
+Hoặc gọi hotline để được tư vấn trực tiếp!
+
+NGUYÊN TẮC TRẢ LỜI:
+- Nếu khách hỏi về sản phẩm → giới thiệu chi tiết, gợi ý phù hợp
+- Nếu hỏi giá → báo giá rõ ràng, có thể đề xuất combo
+- Nếu hỏi công dụng → giải thích cụ thể, dễ hiểu
+- Nếu hỏi cách đặt → hướng dẫn từng bước, đơn giản
+- Nếu chào hỏi → chào lại thân thiện, hỏi khách cần gì
+- Nếu không liên quan đến trà → lịch sự đưa về chủ đề trà
+
+LƯU Ý:
+- Không nói dài dòng, mỗi câu trả lời 2-6 dòng là đủ
+- Luôn kết thúc bằng câu hỏi mở để tiếp tục hội thoại
+- Tự nhiên như chat với bạn bè, không cứng nhắc
+- Nếu khách hỏi khó → trung thực nói "em xin phép hỏi lại" hoặc gợi ý gọi hotline`;
+
 // ====== GLOBAL STATE ======
 let cart = [];
 let currentFilter = 'all';
@@ -705,58 +757,6 @@ function updateUserUI() {
 }
 
 
-// ============================================
-// CHAT SUPPORT WIDGET
-// ============================================
-
-const chatToggleBtn = document.getElementById('chatToggleBtn');
-const chatBox = document.getElementById('chatBox');
-const chatClose = document.getElementById('chatClose');
-
-// Mở/đóng chat box
-chatToggleBtn.addEventListener('click', () => {
-    chatBox.classList.toggle('active');
-    chatToggleBtn.classList.toggle('active');
-});
-
-// Đóng chat khi click nút close
-chatClose.addEventListener('click', () => {
-    chatBox.classList.remove('active');
-    chatToggleBtn.classList.remove('active');
-});
-
-// Đóng chat khi click bên ngoài
-document.addEventListener('click', (e) => {
-    if (!chatToggleBtn.contains(e.target) && !chatBox.contains(e.target)) {
-        chatBox.classList.remove('active');
-        chatToggleBtn.classList.remove('active');
-    }
-});
-
-// Xử lý gửi tin nhắn (optional)
-const chatInput = document.querySelector('.chat-input input');
-const chatSendBtn = document.querySelector('.chat-input button');
-const chatMessages = document.querySelector('.chat-messages');
-
-function sendMessage() {
-    const message = chatInput.value.trim();
-    if (message) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'chat-message sent';
-        messageDiv.innerHTML = `<p>${message}</p>`;
-        chatMessages.appendChild(messageDiv);
-        chatInput.value = '';
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-}
-
-chatSendBtn.addEventListener('click', sendMessage);
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
-});
-
 // ====== CONSOLE LOG ======
 console.log('%c🍃 TeaVerse Website', 'color: #2D5016; font-size: 20px; font-weight: bold;');
 console.log('%cWebsite bán trà cao cấp - Thiết kế hiện đại, tối giản', 'color: #3A7D44; font-size: 14px;');
@@ -775,3 +775,207 @@ function goToProductDetail(productId) {
     }
 }
 
+// ============================================
+// WIT.AI CHAT INTEGRATION
+// ============================================
+
+let chatHistory = [];
+
+// Lấy các phần tử DOM
+const chatToggleBtn = document.getElementById('chatToggleBtn');
+const chatBox = document.getElementById('chatBox');
+const chatClose = document.getElementById('chatClose');
+const chatInput = document.querySelector('.chat-input input');
+const chatSendBtn = document.querySelector('.chat-input button');
+
+// Khởi tạo chat với tin nhắn chào mừng
+function initChatMessages() {
+    const chatMessages = document.querySelector('.chat-messages');
+    if (chatMessages && chatMessages.children.length === 0) {
+        displayMessage('Chào Anh/Chị! Em là chuyên gia trà Phú Hội 🍃', false);
+        displayMessage('Anh/Chị cần tư vấn gì về trà Phú Hội không ạ? 😊', false);
+    }
+}
+
+// Lưu lịch sử hội thoại
+let conversationHistory = [];
+
+async function sendToDeepSeek(userMessage) {
+    try {
+        // Thêm tin nhắn user vào lịch sử
+        conversationHistory.push({
+            role: 'user',
+            content: userMessage
+        });
+
+        // Gọi OpenRouter API
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': window.location.href, // Bắt buộc
+                'X-Title': 'TeaVerse Chatbot' // Tùy chọn
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [
+                    {
+                        role: 'system',
+                        content: SYSTEM_PROMPT
+                    },
+                    ...conversationHistory
+                ],
+                temperature: 0.7, // Điều chỉnh độ sáng tạo (0-1)
+                max_tokens: 1000,  // Giới hạn độ dài câu trả lời
+                top_p: 0.9
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.message || 'API Error');
+        }
+
+        const data = await response.json();
+        const aiResponse = data.choices[0].message.content;
+
+        // Lưu phản hồi vào lịch sử
+        conversationHistory.push({
+            role: 'assistant',
+            content: aiResponse
+        });
+
+        // Giữ lịch sử không quá dài (10 tin nhắn gần nhất)
+        if (conversationHistory.length > 10) {
+            conversationHistory = conversationHistory.slice(-10);
+        }
+
+        return aiResponse;
+
+    } catch (error) {
+        console.error('DeepSeek Error:', error);
+        return '😔 Em đang gặp chút vấn đề kỹ thuật. Anh/chị có thể thử lại hoặc gọi cho em qua số 0798 130 810 nhé!';
+    }
+}
+
+// Hiển thị tin nhắn trong chat
+function displayMessage(message, isUser = false) {
+    const chatMessages = document.querySelector('.chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${isUser ? 'sent' : 'received'}`;
+    
+    // Xử lý format: **text** → <strong>text</strong>
+    let formattedMessage = message
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Text đậm
+        .replace(/\n/g, '<br>'); // Xuống dòng
+    
+    messageDiv.innerHTML = `<p>${formattedMessage}</p>`;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Hiển thị typing indicator
+function showTypingIndicator() {
+    const chatMessages = document.querySelector('.chat-messages');
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-message received typing-indicator';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = `<p>Đang soạn tin...</p>`;
+    chatMessages.appendChild(typingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Xóa typing indicator
+function hideTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.remove();
+}
+
+// Xử lý gửi tin nhắn
+async function handleSendMessage() {
+    const message = chatInput.value.trim();
+    
+    if (!message) return;
+    
+    displayMessage(message, true);
+    chatInput.value = '';
+    
+    showTypingIndicator();
+    
+    const aiResponse = await sendToDeepSeek(message);
+    
+    hideTypingIndicator();
+    displayMessage(aiResponse, false);
+}
+
+// ===== EVENT LISTENERS CHO CHAT =====
+
+// Mở/đóng chat box
+if (chatToggleBtn) {
+    chatToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        chatBox.classList.toggle('active');
+        chatToggleBtn.classList.toggle('active');
+        
+        // Khởi tạo tin nhắn chào nếu chưa có
+        initChatMessages();
+    });
+}
+
+// Đóng chat khi click nút close
+if (chatClose) {
+    chatClose.addEventListener('click', () => {
+        chatBox.classList.remove('active');
+        chatToggleBtn.classList.remove('active');
+    });
+}
+
+// Đóng chat khi click bên ngoài
+document.addEventListener('click', (e) => {
+    if (chatBox && chatBox.classList.contains('active')) {
+        if (!chatToggleBtn.contains(e.target) && !chatBox.contains(e.target)) {
+            chatBox.classList.remove('active');
+            chatToggleBtn.classList.remove('active');
+        }
+    }
+});
+
+// Event listeners cho gửi tin nhắn
+if (chatSendBtn && chatInput) {
+    chatSendBtn.addEventListener('click', handleSendMessage);
+    
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    });
+}
+
+// Giới hạn độ dài tin nhắn
+async function handleSendMessage() {
+    const message = chatInput.value.trim();
+    
+    if (!message) return;
+    
+    // Giới hạn 500 ký tự
+    if (message.length > 500) {
+        showNotification('Tin nhắn quá dài. Vui lòng rút ngắn lại ạ!');
+        return;
+    }
+    
+    displayMessage(message, true);
+    chatInput.value = '';
+    chatInput.disabled = true; // Disable khi đang xử lý
+    
+    showTypingIndicator();
+    
+    const aiResponse = await sendToDeepSeek(message);
+    
+    hideTypingIndicator();
+    displayMessage(aiResponse, false);
+    
+    chatInput.disabled = false;
+    chatInput.focus();
+}
