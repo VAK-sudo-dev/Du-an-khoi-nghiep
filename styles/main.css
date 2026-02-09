@@ -1476,11 +1476,19 @@ input, textarea {
     position: absolute;
     bottom: 80px;
     right: 0;
-    width: 350px;
+    width: 400px;
+    height: 550px;
     max-width: 90vw;
-    background: var(--white);
+    background: #FFFFFF;
     border-radius: 20px;
     box-shadow: var(--shadow-xl);
+    border: 2px solid #E8DCC4;
+    
+    /* THÊM 2 DÒNG NÀY - QUAN TRỌNG NHẤT */
+    display: flex;
+    flex-direction: column;
+    
+    /* Để animation hoạt động */
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px) scale(0.9);
@@ -1491,6 +1499,7 @@ input, textarea {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
+    display: flex; /* Đảm bảo giữ flex khi active */
 }
 
 /* Chat Header */
@@ -1545,16 +1554,37 @@ input, textarea {
 
 /* Chat Messages */
 .chat-messages {
+    flex: 1;
     padding: 20px;
-    max-height: 300px;
     overflow-y: auto;
-    background: #f8f9fa;
+    background: #FAFAF8;
+}
+
+/* Styling cho scrollbar */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #D4C5A9;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #C4B599;
 }
 
 .chat-message {
     margin-bottom: 15px;
+    display: flex;
     animation: messageSlide 0.3s ease;
 }
+
+
 
 @keyframes messageSlide {
     from {
@@ -1568,27 +1598,42 @@ input, textarea {
 }
 
 .chat-message.received p {
-    background: var(--white);
-    color: var(--text-color);
-    padding: 12px 16px;
-    border-radius: 15px 15px 15px 5px;
-    display: inline-block;
-    max-width: 85%;
-    margin: 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    line-height: 1.5;
+    background: #FFFFFF; /* Nền trắng */
+    color: #333333;
+    border: 1.5px solid #E8DCC4; /* Viền nhẹ */
+    border-radius: 16px 16px 16px 4px; /* Bo góc đặc biệt - góc trái dưới nhọn */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== TIN NHẮN TỪ USER (BÊN PHẢI) ===== */
+.chat-message.sent {
+    justify-content: flex-end; /* Căn phải */
 }
 
 .chat-message.sent p {
-    background: var(--primary-color);
-    color: var(--white);
-    padding: 12px 16px;
-    border-radius: 15px 15px 5px 15px;
-    display: inline-block;
-    max-width: 85%;
-    margin: 0 0 0 auto;
-    clear: both;
-    line-height: 1.5;
+    background: linear-gradient(135deg, #2D5016 0%, #3A7D44 100%); /* Gradient xanh */
+    color: white;
+    border-radius: 16px 16px 4px 16px; /* Bo góc đặc biệt - góc phải dưới nhọn */
+    box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
+    margin-left: auto; /* Đẩy về phía phải */
+}
+
+/* ===== TYPING INDICATOR ===== */
+.typing-indicator {
+    justify-content: flex-start;
+}
+
+.typing-indicator p {
+    background: #FFFFFF !important;
+    border: 1.5px solid #E8DCC4 !important;
+    color: #999 !important;
+    font-style: italic;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
 }
 
 /* Chat Input */
@@ -1673,3 +1718,60 @@ input, textarea {
 .chat-messages::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
+
+/* Typing Indicator */
+.typing-indicator p {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Chat messages styling */
+.chat-message p {
+    margin: 0;
+    padding: 12px 16px;
+    border-radius: 16px;
+    max-width: 75%;
+    word-wrap: break-word;
+    line-height: 1.5;
+    font-size: 14.5px;
+    white-space: pre-wrap; /* Giữ xuống dòng */
+}
+
+.chat-message p {
+    line-height: 1.6;
+}
+
+.chat-message p br {
+    content: "";
+    display: block;
+    margin-top: 8px;
+}
+
+/* ===== TIN NHẮN TỪ BOT (BÊN TRÁI) ===== */
+.chat-message.received {
+    justify-content: flex-start; /* Căn trái */
+}
+
+
+/* Format text trong chat message */
+.chat-message p strong {
+    font-weight: 700;
+    color: inherit;
+}
+
+/* Text đậm trong tin nhắn BOT */
+.chat-message.received p strong {
+    color: #2D5016; /* Màu xanh đậm */
+    font-weight: 800;
+}
+
+/* Text đậm trong tin nhắn USER */
+.chat-message.sent p strong {
+    color: #FFE8A3; /* Màu vàng nhạt để nổi bật trên nền xanh */
+    font-weight: 800;
+}
+

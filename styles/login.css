@@ -1101,3 +1101,9 @@ body:has(.success-message:not(.hidden)) .bg-circle {
 .toast-container .toast:not(:last-child) {
     margin-bottom: 0;
 }
+
+.logo-img {
+    width: 25%;
+    height: 25%;
+    object-fit: contain;
+}
