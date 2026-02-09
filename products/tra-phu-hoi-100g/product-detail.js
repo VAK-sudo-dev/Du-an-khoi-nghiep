@@ -12,14 +12,15 @@ let currentUser = null;
 // Thông tin sản phẩm hiện tại - LẤY TỪ PRODUCTS DATA
 function getCurrentProduct() {
     // Giả sử product ID = 1 (Trà Phú Hội)
-    const productId = 4;
+    const productId = 1;
     return productsData.find(product => product.id === productId) || {
-        id: 4,
-        name: 'Trà Phú Hội (Hộp 100g)',
+        id: 1,
+        name: 'Trà Phú Hội (Hộp 200g)',
         category: 'green',
-        price: 100000,
-        image: '../../src/Hu-tra-phu-hoi-100g.jpg',
-        description: 'Trà Phú Hội - 100g',
+        price: 200000,
+        image: '../../src/Hu-tra-phu-hoi.jpg',
+        description: 'Trà Phú Hội - Mô tả ngắn',
+        badge: 'Bán chạy',
         stock: 50
     };
 }
