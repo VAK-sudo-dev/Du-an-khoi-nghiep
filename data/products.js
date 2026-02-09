@@ -34,6 +34,16 @@ const productsData = [
         image: 'src/Goi-tra-phu-hoi.jpg',
         description: 'Trà Phú Hội - Mô tả ngắn',
         stock: 50
+    }, 
+
+    {
+        id: 4,
+        name: 'Trà Phú Hội (Hộp 100g)',
+        category: 'green',
+        price: 100000,
+        image: 'src/Hu-tra-phu-hoi-100g.jpg',
+        description: 'Trà Phú Hội - Hộp 100g',
+        stock: 50
     }
 ];
 

@@ -17,7 +17,7 @@ PHONG CÁCH GIAO TIẾP:
 - Tạo cảm giác như đang chat với người thật, không máy móc
 
 SẢN PHẨM CỦA TEAVERSE:
-1. **Trà Xanh Phú Hội** - 200.000đ (Hộp 200g) (hoặc 450.000đ (Túi 500g))
+1. **Trà Xanh Phú Hội** - 200.000đ (Hộp 200g) (Hộp 100g hoặc 450.000đ (Túi 500g))
    - Tươi mát, thanh nhiệt
    - Giàu chất chống oxy hóa
    - Phù hợp uống hàng ngày
@@ -786,7 +786,8 @@ function goToProductDetail(productId) {
     const productUrls = {
         1: 'products/tra-phu-hoi/index.html',
         2: 'products/tra-phu-hoi-vi-gung/index.html', // Tạm dùng cùng trang (sửa sau)
-        3: 'products/goi-tra-phu-hoi/index.html'  // Tạm dùng cùng trang (sửa sau)
+        3: 'products/goi-tra-phu-hoi/index.html',  // Tạm dùng cùng trang (sửa sau)
+        4: 'products/tra-phu-hoi-100g/index.html'
     };
     
     const url = productUrls[productId];
