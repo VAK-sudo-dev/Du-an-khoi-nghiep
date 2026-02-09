@@ -754,6 +754,19 @@ input, textarea {
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M100 20C100 20 60 40 60 80C60 100 70 115 85 125C70 135 60 150 60 170C60 210 100 230 100 230C100 230 140 210 140 170C140 150 130 135 115 125C130 115 140 100 140 80C140 40 100 20 100 20Z" fill="white" opacity="0.2"/></svg>') center/contain no-repeat;
 }
 
+/* Ảnh trong khung about-image-main */
+.about-image-main-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Giữ phần giữa của ảnh, cắt đều 2 bên */
+    object-position: center;
+    display: block;
+}
+
 .about-badge {
     position: absolute;
     bottom: 30px;
@@ -839,16 +852,23 @@ input, textarea {
 }
 
 .blog-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* căn giữa hàng */
     gap: 40px;
+    margin: 0 auto;
+    /* giữ responsive: cards sẽ lăn xuống hàng khi cần */
 }
 
 .blog-card {
+    flex: 0 1 360px; /* cố định rộng tối ưu, cho phép co khi cần */
+    max-width: 360px;
+    width: 100%;
     background: var(--white);
     border-radius: 20px;
     overflow: hidden;
     transition: var(--transition);
+    cursor: pointer;
 }
 
 .blog-card:hover {
@@ -1442,7 +1462,8 @@ input, textarea {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    z-index: 10000;
+    /* Giảm z-index để không chồng lên header (header có z-index:1000) */
+    z-index: 900;
 }
 
 /* Nút mở chat */
@@ -1460,6 +1481,8 @@ input, textarea {
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Giữ nút phía dưới header nhưng vẫn hiển thị trên nội dung chính */
+    z-index: 900;
 }
 
 .chat-toggle-btn:hover {
@@ -1479,15 +1502,15 @@ input, textarea {
     width: 400px;
     height: 550px;
     max-width: 90vw;
-    background: #FFFFFF;
+    /* Màu nền dễ phân biệt hơn so với background trang */
+    background: #FFFDF7; /* warm off-white */
     border-radius: 20px;
-    box-shadow: var(--shadow-xl);
+    box-shadow: 0 20px 40px rgba(18, 38, 12, 0.12);
     border: 2px solid #E8DCC4;
-    
-    /* THÊM 2 DÒNG NÀY - QUAN TRỌNG NHẤT */
     display: flex;
     flex-direction: column;
-    
+    /* Đặt z-index cho khung chat sao cho hiển thị trên nội dung nhưng dưới header */
+    z-index: 950;
     /* Để animation hoạt động */
     opacity: 0;
     visibility: hidden;

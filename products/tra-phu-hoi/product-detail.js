@@ -14,8 +14,8 @@ const currentProduct = {
     id: 1,
     name: 'Trà Phú Hội',
     category: 'green',
-    price: 3600000,
-    image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect fill='%233A7D44' width='400' height='400'/><circle cx='200' cy='200' r='120' fill='%236FBF73' opacity='0.3'/><text x='50%' y='50%' font-size='20' fill='white' text-anchor='middle' dy='.3em'>Sencha</text></svg>",
+    price: 200000,
+    image: '../../src/Tra-phu-hoi-1.jpg',
     description: 'Trà Phú Hội - Mô tả ngắn',
     badge: 'Bán chạy',
     stock: 50
@@ -89,50 +89,156 @@ function updateCartQuantity(productId, change) {
     }
 }
 
-// Cập nhật giao diện giỏ hàng
+// Cập nhật giao diện giỏ hàng - VIẾT LẠI HOÀN TOÀN
 function updateCartUI() {
+    console.log('Updating cart UI with:', cart); // Debug
+    
     // Cập nhật số lượng trên icon
     const cartCount = document.getElementById('cartCount');
+    if (!cartCount) {
+        console.error('cartCount element not found');
+        return;
+    }
+    
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
     cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
 
     // Cập nhật danh sách sản phẩm trong sidebar
     const cartItems = document.getElementById('cartItems');
+    if (!cartItems) {
+        console.error('cartItems element not found');
+        return;
+    }
     
     if (cart.length === 0) {
         cartItems.innerHTML = `
-            <div class="cart-empty">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+            <div class="cart-empty" style="text-align: center; padding: 60px 20px; color: var(--gray);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 80px; height: 80px; margin: 0 auto 20px; opacity: 0.3;">
+                    <circle cx="9" cy="21" r="1" stroke-width="2"/><circle cx="20" cy="21" r="1" stroke-width="2"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" stroke-width="2"/>
                 </svg>
-                <p>Giỏ hàng trống</p>
+                <p style="font-size: 1.1rem; margin: 0;">Giỏ hàng trống</p>
             </div>
         `;
     } else {
-        cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-image">
-                    <img src="${item.image}" alt="${item.name}">
-                </div>
-                <div class="cart-item-details">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">${formatPrice(item.price)}</div>
-                    <div class="cart-item-quantity">
-                        <button class="qty-btn" onclick="updateCartQuantity(${item.id}, -1)">-</button>
-                        <span class="cart-item-qty">${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateCartQuantity(${item.id}, 1)">+</button>
-                    </div>
-                </div>
-                <button class="cart-item-remove" onclick="removeFromCart(${item.id})">&times;</button>
-            </div>
-        `).join('');
+        // Clear existing content
+        cartItems.innerHTML = '';
+        
+        // Render từng item bằng DOM manipulation (an toàn hơn)
+        cart.forEach(item => {
+            console.log('Rendering item:', item); // Debug
+            
+            const cartItemDiv = document.createElement('div');
+            cartItemDiv.className = 'cart-item';
+            cartItemDiv.style.cssText = 'display: flex; gap: 15px; padding: 20px 0; border-bottom: 1px solid #E8E8E8; align-items: center;';
+            
+            // Image container
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'cart-item-image';
+            imageDiv.style.cssText = 'width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: #F5F1E8;';
+            
+            const img = document.createElement('img');
+            const imagePath = item.image || '../../src/Tra-phu-hoi-1.jpg';
+            console.log('Image path:', imagePath); // Debug
+            img.src = imagePath;
+            img.alt = item.name;
+            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
+            
+            // Error handler cho ảnh
+            img.onerror = function() {
+                console.error('Image failed to load:', this.src);
+                this.src = '../../src/Tra-phu-hoi-1.jpg';
+                this.onerror = function() {
+                    console.error('Fallback image also failed');
+                    // Hiển thị placeholder text nếu ảnh không load được
+                    this.style.display = 'none';
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = 'width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #3A7D44; color: white; font-weight: bold;';
+                    placeholder.textContent = item.name.charAt(0);
+                    imageDiv.appendChild(placeholder);
+                };
+            };
+            
+            img.onload = function() {
+                console.log('Image loaded successfully:', this.src); // Debug
+            };
+            
+            imageDiv.appendChild(img);
+            
+            // Details container
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'cart-item-details';
+            detailsDiv.style.cssText = 'flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0;';
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'cart-item-name';
+            nameDiv.textContent = item.name;
+            nameDiv.style.cssText = 'font-weight: 600; color: #2D5016; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;';
+            
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'cart-item-price';
+            priceDiv.textContent = formatPrice(item.price);
+            priceDiv.style.cssText = 'color: #3A7D44; font-weight: 600; font-size: 0.95rem;';
+            
+            // Quantity controls
+            const qtyDiv = document.createElement('div');
+            qtyDiv.className = 'cart-item-quantity';
+            qtyDiv.style.cssText = 'display: flex; align-items: center; gap: 10px;';
+            
+            const minusBtn = document.createElement('button');
+            minusBtn.className = 'qty-btn';
+            minusBtn.textContent = '-';
+            minusBtn.style.cssText = 'width: 30px; height: 30px; border-radius: 50%; background: #F5F1E8; border: none; cursor: pointer; font-weight: 600; color: #3A7D44; transition: all 0.3s;';
+            minusBtn.onmouseover = function() { this.style.background = '#E5E1D8'; };
+            minusBtn.onmouseout = function() { this.style.background = '#F5F1E8'; };
+            minusBtn.onclick = () => updateCartQuantity(item.id, -1);
+            
+            const qtySpan = document.createElement('span');
+            qtySpan.className = 'cart-item-qty';
+            qtySpan.textContent = item.quantity;
+            qtySpan.style.cssText = 'min-width: 30px; text-align: center; font-weight: 600; color: #2D5016;';
+            
+            const plusBtn = document.createElement('button');
+            plusBtn.className = 'qty-btn';
+            plusBtn.textContent = '+';
+            plusBtn.style.cssText = 'width: 30px; height: 30px; border-radius: 50%; background: #F5F1E8; border: none; cursor: pointer; font-weight: 600; color: #3A7D44; transition: all 0.3s;';
+            plusBtn.onmouseover = function() { this.style.background = '#E5E1D8'; };
+            plusBtn.onmouseout = function() { this.style.background = '#F5F1E8'; };
+            plusBtn.onclick = () => updateCartQuantity(item.id, 1);
+            
+            qtyDiv.appendChild(minusBtn);
+            qtyDiv.appendChild(qtySpan);
+            qtyDiv.appendChild(plusBtn);
+            
+            detailsDiv.appendChild(nameDiv);
+            detailsDiv.appendChild(priceDiv);
+            detailsDiv.appendChild(qtyDiv);
+            
+            // Remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'cart-item-remove';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.style.cssText = 'width: 30px; height: 30px; border-radius: 50%; background: transparent; border: none; cursor: pointer; font-size: 1.8rem; color: #999; flex-shrink: 0; line-height: 1; transition: all 0.3s;';
+            removeBtn.onmouseover = function() { this.style.color = '#FF4444'; this.style.background = '#FFEBEE'; };
+            removeBtn.onmouseout = function() { this.style.color = '#999'; this.style.background = 'transparent'; };
+            removeBtn.onclick = () => removeFromCart(item.id);
+            
+            // Append all elements
+            cartItemDiv.appendChild(imageDiv);
+            cartItemDiv.appendChild(detailsDiv);
+            cartItemDiv.appendChild(removeBtn);
+            
+            cartItems.appendChild(cartItemDiv);
+        });
     }
 
     // Cập nhật tổng tiền
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    document.getElementById('cartTotal').textContent = formatPrice(total);
+    const cartTotal = document.getElementById('cartTotal');
+    if (cartTotal) {
+        cartTotal.textContent = formatPrice(total);
+    }
 }
 
 // Format giá tiền
@@ -148,43 +254,49 @@ function initEventListeners() {
     const increaseBtn = document.getElementById('increaseQty');
     const quantityInput = document.getElementById('quantity');
 
-    decreaseBtn.addEventListener('click', () => {
-        if (currentQuantity > 1) {
-            currentQuantity--;
-            quantityInput.value = currentQuantity;
-        }
-    });
+    if (decreaseBtn && increaseBtn && quantityInput) {
+        decreaseBtn.addEventListener('click', () => {
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                quantityInput.value = currentQuantity;
+            }
+        });
 
-    increaseBtn.addEventListener('click', () => {
-        if (currentQuantity < currentProduct.stock) {
-            currentQuantity++;
-            quantityInput.value = currentQuantity;
-        }
-    });
+        increaseBtn.addEventListener('click', () => {
+            if (currentQuantity < currentProduct.stock) {
+                currentQuantity++;
+                quantityInput.value = currentQuantity;
+            }
+        });
 
-    quantityInput.addEventListener('change', (e) => {
-        let value = parseInt(e.target.value);
-        if (isNaN(value) || value < 1) {
-            value = 1;
-        } else if (value > currentProduct.stock) {
-            value = currentProduct.stock;
-        }
-        currentQuantity = value;
-        quantityInput.value = value;
-    });
+        quantityInput.addEventListener('change', (e) => {
+            let value = parseInt(e.target.value);
+            if (isNaN(value) || value < 1) {
+                value = 1;
+            } else if (value > currentProduct.stock) {
+                value = currentProduct.stock;
+            }
+            currentQuantity = value;
+            quantityInput.value = value;
+        });
+    }
 
     // Add to cart button
     const addToCartBtn = document.getElementById('addToCartBtn');
-    addToCartBtn.addEventListener('click', () => {
-        addToCart(currentQuantity);
-    });
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', () => {
+            addToCart(currentQuantity);
+        });
+    }
 
     // Buy now button
     const buyNowBtn = document.getElementById('buyNowBtn');
-    buyNowBtn.addEventListener('click', () => {
-        addToCart(currentQuantity);
-        window.location.href = '../../checkout/checkout.html';
-    });
+    if (buyNowBtn) {
+        buyNowBtn.addEventListener('click', () => {
+            addToCart(currentQuantity);
+            window.location.href = '../../checkout/checkout.html';
+        });
+    }
 
     // Cart sidebar
     const cartBtn = document.getElementById('cartBtn');
@@ -192,23 +304,25 @@ function initEventListeners() {
     const cartClose = document.getElementById('cartClose');
     const cartOverlay = document.getElementById('cartOverlay');
 
-    cartBtn.addEventListener('click', () => {
-        cartSidebar.classList.add('active');
-        cartOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
+    if (cartBtn && cartSidebar && cartClose && cartOverlay) {
+        cartBtn.addEventListener('click', () => {
+            cartSidebar.classList.add('active');
+            cartOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
 
-    cartClose.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        cartOverlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
+        cartClose.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+            cartOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
 
-    cartOverlay.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        cartOverlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
+        cartOverlay.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+            cartOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    }
 
     // Checkout button
     const checkoutBtn = document.getElementById('checkoutBtn');
@@ -225,10 +339,12 @@ function initEventListeners() {
     // Header scroll effect
     window.addEventListener('scroll', () => {
         const header = document.getElementById('header');
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        if (header) {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         }
     });
 
@@ -236,10 +352,12 @@ function initEventListeners() {
     const hamburger = document.getElementById('hamburger');
     const nav = document.getElementById('nav');
 
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        nav.classList.toggle('active');
-    });
+    if (hamburger && nav) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+    }
 
     // User dropdown
     const userBtn = document.getElementById('userBtn');
@@ -250,7 +368,6 @@ function initEventListeners() {
             e.stopPropagation();
             
             if (!isLoggedIn) {
-                // Redirect to login page
                 window.location.href = '../../login.html';
                 return;
             }
@@ -276,7 +393,9 @@ function initEventListeners() {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             logoutUser();
-            userDropdown.classList.remove('active');
+            if (userDropdown) {
+                userDropdown.classList.remove('active');
+            }
         });
     }
 }
@@ -291,13 +410,14 @@ function initTabs() {
         button.addEventListener('click', () => {
             const targetTab = button.getAttribute('data-tab');
 
-            // Remove active class from all buttons and panes
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabPanes.forEach(pane => pane.classList.remove('active'));
 
-            // Add active class to clicked button and corresponding pane
             button.classList.add('active');
-            document.getElementById(targetTab).classList.add('active');
+            const targetPane = document.getElementById(targetTab);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
         });
     });
 }
@@ -308,18 +428,15 @@ function initImageGallery() {
     const mainImage = document.getElementById('mainImage');
     const thumbnails = document.querySelectorAll('.thumbnail');
 
-    thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', () => {
-            // Remove active class from all thumbnails
-            thumbnails.forEach(thumb => thumb.classList.remove('active'));
-            
-            // Add active class to clicked thumbnail
-            thumbnail.classList.add('active');
-            
-            // Update main image
-            mainImage.src = thumbnail.src;
+    if (mainImage && thumbnails.length > 0) {
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                thumbnail.classList.add('active');
+                mainImage.src = thumbnail.src;
+            });
         });
-    });
+    }
 }
 
 // ====== NOTIFICATIONS ======
@@ -382,7 +499,6 @@ document.head.appendChild(style);
 // ====== AUTH MANAGEMENT ======
 
 async function initAuth() {
-    // Check if user is logged in from localStorage
     const savedUser = localStorage.getItem('teaUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
@@ -390,7 +506,6 @@ async function initAuth() {
         updateUserUI();
     }
 
-    // If using Supabase, check session
     if (typeof supabaseClient !== 'undefined') {
         try {
             const { data } = await supabaseClient.auth.getUser();
@@ -419,7 +534,6 @@ function logoutUser() {
     updateUserUI();
     showNotification('Đã đăng xuất');
     
-    // If using Supabase
     if (typeof supabaseClient !== 'undefined') {
         supabaseClient.auth.signOut();
     }
@@ -427,6 +541,8 @@ function logoutUser() {
 
 function updateUserUI() {
     const userBtn = document.getElementById('userBtn');
+    if (!userBtn) return;
+    
     const userArrow = userBtn.querySelector('.user-arrow');
     const userName = document.getElementById('userName');
     

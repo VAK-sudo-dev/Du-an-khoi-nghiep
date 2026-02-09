@@ -466,15 +466,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modalOverlay.classList.add('show');
             setTimeout(() => modal.classList.add('show'), 100);
         }, 100);
-
-        // Close on overlay click
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalOverlay.classList.remove('show');
-                modal.classList.remove('show');
-                setTimeout(() => modalOverlay.remove(), 300);
-            }
-        });
     }
 
     function getPaymentMethodName() {
