@@ -4,8 +4,8 @@
    ============================================ */
    
 // ====== CHATBOT CONFIGURATION ======
-const OPENROUTER_API_KEY = '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'; // Thay bằng key của bạn
-const MODEL = 'deepseek/deepseek-r1-0528';
+const OPENROUTER_API_KEY = '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'; // Thay bằng key của bạn
+const MODEL = 'deepseek/deepseek-r1-0528:free';
 
 const SYSTEM_PROMPT = `Bạn là chuyên gia tư vấn trà của Trà Phú Hội- thương hiệu trà cao cấp Phú Hội, Việt Nam.
 
@@ -21,6 +21,9 @@ SẢN PHẨM CỦA TEAVERSE:
    - Tươi mát, thanh nhiệt
    - Giàu chất chống oxy hóa
    - Phù hợp uống hàng ngày
+
+QUY TRÌNH PHA TRÀ:
+1. 
 
 CÔNG DỤNG TRÀ PHÚ HỘI:
 ✨ Tăng cường sức khỏe, miễn dịch
@@ -195,6 +198,18 @@ function renderProducts(filter = 'all') {
     // Lọc theo category
     if (filter !== 'all') {
         filteredProducts = productsData.filter(p => p.category === filter);
+    }
+
+    // Xác định số lượng sản phẩm hiển thị dựa trên kích thước màn hình
+    let defaultItemsToShow = 3; // Desktop: 3 sản phẩm
+    
+    if (window.innerWidth < 768) {
+        defaultItemsToShow = 1; // Mobile: 1 sản phẩm
+    }
+
+    // Nếu chưa set displayedProducts, dùng giá trị mặc định
+    if (displayedProducts === 1 && window.innerWidth >= 768) {
+        displayedProducts = defaultItemsToShow;
     }
 
     // Hiển thị số lượng sản phẩm theo displayedProducts
@@ -765,19 +780,22 @@ console.log('%cPhát triển bởi VAK', 'color: #6FBF73; font-size: 12px;');
 function goToProductDetail(productId) {
     // Map product IDs to their detail page URLs
     const productUrls = {
-        1: 'products/tra-phu-hoi/index.html'
-        // Thêm các sản phẩm khác ở đây sau
+        1: 'products/tra-phu-hoi/index.html',
+        2: 'products/tra-phu-hoi-vi-gung/index.html', // Tạm dùng cùng trang (sửa sau)
+        3: 'products/goi-tra-phu-hoi/index.html'  // Tạm dùng cùng trang (sửa sau)
     };
     
     const url = productUrls[productId];
     if (url) {
         window.location.href = url;
+    } else {
+        console.error(`Product URL not found for product ID: ${productId}`);
+        // Fallback: đi đến trang đầu tiên
+        window.location.href = 'products/tra-phu-hoi/index.html';
     }
 }
 
-// ============================================
-// WIT.AI CHAT INTEGRATION
-// ============================================
+
 
 let chatHistory = [];
 
@@ -978,4 +996,37 @@ async function handleSendMessage() {
     
     chatInput.disabled = false;
     chatInput.focus();
+}
+
+// ====== BLOG PAGE SUPPORT ======
+function isBlogPage() {
+    return window.location.pathname.includes('/blog/');
+}
+
+// Modify smooth scroll for blog pages
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            
+            // Nếu là link tới section trên trang chủ
+            if (href.startsWith('#') && href.length > 1) {
+                // Nếu đang ở trang blog, redirect về trang chủ
+                if (isBlogPage()) {
+                    window.location.href = '../../index.html' + href;
+                    return;
+                }
+                
+                // Nếu ở trang chủ, scroll bình thường
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
 }

@@ -1463,7 +1463,7 @@ input, textarea {
     bottom: 30px;
     right: 30px;
     /* Giảm z-index để không chồng lên header (header có z-index:1000) */
-    z-index: 900;
+    z-index: 9000;
 }
 
 /* Nút mở chat */

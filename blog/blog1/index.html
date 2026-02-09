@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trà Phú Hội - Hương Vị Đặc Sản Vùng Đất Đồng Nai</title>
+    <meta name="description" content="Khám phá câu chuyện về Trà Phú Hội - thức trà thơm đặc sản của vùng đất Đồng Nai, được nuôi dưỡng bởi nguồn nước Mạch Bà huyền thoại">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="../../styles/responsive.css">
+    <link rel="stylesheet" href="blog.css">
+
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="../../src/logo.png" alt="Trà Phú Hội" class="logo-img">
+                    </div>
+                    <span class="logo-text">Trà Phú Hội</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="nav" id="nav">
+                    <ul class="nav-list">
+                        <li><a href="../../index.html" class="nav-link">Trang chủ</a></li>
+                        <li><a href="../../index.html#products" class="nav-link">Sản phẩm</a></li>
+                        <li><a href="../../index.html#about" class="nav-link">Về chúng tôi</a></li>
+                        <li><a href="#" class="nav-link active">Blog</a></li>
+                        <li><a href="../../index.html#contact" class="nav-link">Liên hệ</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <button class="icon-btn search-btn" aria-label="Tìm kiếm">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                            <path d="M21 21L16.65 16.65" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn cart-btn" aria-label="Giỏ hàng" id="cartBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 2L7 6M17 2L19 6M3 6H21M19 6L17 20H7L5 6M10 11V15M14 11V15" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+
+                    <button class="icon-btn user-btn" id="userBtn" aria-label="Tài khoản">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span class="user-arrow" style="display: none;">▼</span>
+                    </button>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-info-section">
+                            <div class="user-name" id="userName">Tên người dùng</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="profileBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>Hồ sơ</span>
+                        </a>
+                        <a href="#" class="dropdown-item" id="ordersBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                <path d="M9 3v18M15 3v18M3 9h18M3 15h18"></path>
+                            </svg>
+                            <span>Lịch sử đặt hàng</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout-item" id="logoutBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Đăng xuất</span>
+                        </a>
+                    </div>
+
+                    <button class="hamburger" id="hamburger" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEARCH MODAL -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <button class="search-close" id="searchClose">&times;</button>
+            <div class="search-box">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                    <path d="M21 21L16.65 16.65" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- BLOG HERO -->
+    <section class="blog-hero">
+        <div class="container">
+            <div class="blog-hero-content">
+                <div class="blog-category">📖 Văn hóa trà</div>
+                <h1>Trà Phú Hội - Hương Vị Đặc Sản<br>Vùng Đất Đồng Nai</h1>
+                <div class="blog-meta">
+                    <div class="blog-meta-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <span>9 Tháng 2, 2026</span>
+                    </div>
+                    <div class="blog-meta-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>7 phút đọc</span>
+                    </div>
+                    <div class="blog-meta-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        <span>Trà Phú Hội</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOG CONTENT -->
+    <div class="blog-container">
+        <article class="blog-content">
+            <div class="blog-body">
+                <p class="blog-intro">
+                    "Nước Mạch Bà - trà Phú Hội" - câu nói quen thuộc của người dân Đồng Nai không chỉ là lời ca ngợi về sản vật nổi tiếng, mà còn là niềm tự hào về một thương hiệu trà lâu đời mang đậm bản sắc vùng đất Nhơn Trạch.
+                </p>
+
+                <h2>Vùng Đất Trù Phú - Nơi Trà Phú Hội Sinh Ra</h2>
+                
+                <p>
+                    Nằm trên vùng đất xã Phú Hội thuộc huyện Nhơn Trạch, tỉnh Đồng Nai, nơi đây xưa kia là một phần của tổng Thành Tuy, phủ Phước Long, trấn Biên Hòa. Làng Phú Hội được hình thành từ rất sớm, trong thời kỳ khai hoang lập nghiệp, mang theo bề dày văn hóa và sản vật phong phú đặc trưng.
+                </p>
+
+                <p>
+                    Với địa hình bán sơn địa gồ đồi độc đáo, cùng hệ thống nước ngầm và kênh rạch chằng chịt, Phú Hội - Nhơn Trạch là một vùng đất vô cùng trù phú. Nơi đây tự hào với những vườn cây ăn trái sum suê trên cao, những đồi trà xanh mướt, và cả những cánh đồng lúa bạt ngàn cùng ao hồ cá tôm ở vùng đất thấp.
+                </p>
+
+                <div class="blog-quote">
+                    "Nước Mạch Bà, trà Phú Hội, chuối già Long Tân, gạo thơm Phước Khánh, tôm càng Phước Nguyên" - Câu ca dao dân gian vùng Nhơn Trạch
+                </div>
+
+                <h2>Nguồn Nước Mạch Bà - Linh Hồn Của Trà Phú Hội</h2>
+
+                <p>
+                    Một trong những bí mật tạo nên sức hấp dẫn độc đáo của trà Phú Hội chính là nguồn nước ngầm Mạch Bà huyền thoại. Đây là mạch nước đặc biệt được sử dụng để tưới tiêu cho cây trà, mang lại cho lá trà những khoáng chất quý giá và hương vị không thể lẫn với bất kỳ loại trà nào khác.
+                </p>
+
+                <p>
+                    Thổ nhưỡng phù hợp kết hợp với dòng nước Mạch Bà nuôi dưỡng đã giúp những vườn trà Phú Hội xanh tốt quanh năm, tạo nên hương vị đặc trưng mà chỉ riêng vùng đất này mới có được.
+                </p>
+
+                <h2>Lịch Sử Phát Triển Của Cây Trà Phú Hội</h2>
+
+                <p>
+                    Theo lời kể của các cụ cao tuổi trong vùng, cây trà Phú Hội đã hiện diện từ thời kỳ mở đất lập làng. Những cây trà dại cao ngang đầu người mọc tự nhiên trên các gò đồi, được tổ tiên phát hiện và trồng trọt từ đó.
+                </p>
+
+                <p>
+                    Trong quá khứ, trà Phú Hội là nguồn sống chủ lực của người dân nơi đây. Diện tích trồng trà từng lên đến hàng trăm héc-ta, phát triển rực rỡ đến mức hầu như nhà nào cũng có vườn trà. Từ những mảnh đất vài ngàn mét vuông đến cả những khu vườn rộng một, hai héc-ta đều được người dân tận dụng để trồng trà.
+                </p>
+
+                <div class="blog-highlight">
+                    <h3>Thương Hiệu Trà Phú Hội Ngày Xưa</h3>
+                    <p>
+                        Trà Phú Hội từng nổi tiếng khắp vùng miệt Biên Hòa và Chợ Lớn (nay là TP. Hồ Chí Minh). Sản phẩm trà được người dân ưa chuộng không chỉ vì hương vị độc đáo mà còn vì quy trình làm trà hoàn toàn thủ công, chân thật và an toàn.
+                    </p>
+                </div>
+
+                <p>
+                    Tuy nhiên, theo thời gian, do nhu cầu chuyển đổi cây trồng để phát triển kinh tế đa dạng hơn, cây trà dần bị thu hẹp và thay thế bằng các loại cây ăn trái như dâu ta, sầu riêng, chôm chôm... Nhiều vườn trà chỉ còn được trồng xen canh giữa các loại cây ăn quả.
+                </p>
+
+                <h2>Sự Hồi Sinh Của Trà Phú Hội</h2>
+
+                <p>
+                    May mắn thay, nhờ các chính sách của Đảng và Nhà nước trong việc khôi phục làng nghề truyền thống và phát triển các sản phẩm OCOP (One Commune One Product), trà Phú Hội đang được tái sinh và mở rộng diện tích canh tác.
+                </p>
+
+                <p>
+                    Năm 2020 đánh dấu cột mốc quan trọng khi trà Phú Hội tham gia hội thi cấp tỉnh Đồng Nai và vinh dự đoạt giải "Sản phẩm công nghiệp nông thôn tiêu biểu". Tiếp đó, vào năm 2021, thương hiệu trà Phú Hội chính thức được UBND tỉnh Đồng Nai cấp giấy chứng nhận đạt chuẩn OCOP 3 sao.
+                </p>
+
+                <h2>Quy Trình Chế Biến Truyền Thống - Bí Quyết Tạo Nên Hương Vị</h2>
+
+                <p>
+                    Điều đặc biệt làm nên thương hiệu trà Phú Hội không chỉ nằm ở nguồn nước Mạch Bà, mà còn ở bí quyết chế biến dân dã được truyền từ đời này qua đời khác. Từ xưa đến nay, người dân Phú Hội vẫn kiên trì thực hiện tất cả các công đoạn làm trà hoàn toàn bằng tay, vì chỉ có như vậy trà mới giữ được hương thơm từ nắng và vị ngọt từ đất quê.
+                </p>
+
+                <h3>Các Bước Chế Biến Trà Phú Hội</h3>
+
+                <ul>
+                    <li><strong>Thu hoạch:</strong> Búp trà non được hái vào sáng sớm khi còn đọng sương, đảm bảo độ tươi và giữ trọn tinh chất.</li>
+                    
+                    <li><strong>Phơi héo:</strong> Lá trà được đem phơi dưới ánh nắng trong khoảng 1-2 giờ để làm héo nhẹ.</li>
+                    
+                    <li><strong>Vò xoắn:</strong> Lá trà được vò bằng tay để làm xoắn lại, giúp tinh dầu trong lá tiết ra, tạo hương vị đặc trưng.</li>
+                    
+                    <li><strong>Phơi khô:</strong> Tiếp tục mang đi phơi nắng trong 6-8 giờ cho đến khi thật khô hoàn toàn.</li>
+                    
+                    <li><strong>Rang và ướp:</strong> Nếu muốn tăng hương vị, người làm có thể rang trà và ướp với các loại lá như lá sen, lá dứa, hoa lài, hay trà phật để tạo thêm tầng hương phong phú.</li>
+                </ul>
+
+                <h2>Đặc Điểm Của Trà Phú Hội</h2>
+
+                <p>
+                    Sản phẩm trà Phú Hội khi hoàn thành mang vẻ mộc mạc, tự nhiên. Lá trà có màu nâu đen, hơi thô ráp nhưng mùi hương rất đặc biệt và quyến rũ.
+                </p>
+
+                <div class="blog-highlight">
+                    <h3>Khi Thưởng Thức Trà Phú Hội</h3>
+                    <ul>
+                        <li><strong>Màu nước:</strong> Nâu đỏ đẹp mắt, trong vắt</li>
+                        <li><strong>Hương thơm:</strong> Đặc trưng, thơm nhẹ nhàng của lá trà tươi kết hợp với mùi đất</li>
+                        <li><strong>Vị:</strong> Ngọt nhẹ, dịu mát, thanh khiết</li>
+                        <li><strong>Cảm nhận:</strong> Vị trà lan tỏa trong miệng, để lại dư vị ngọt lâu</li>
+                    </ul>
+                </div>
+
+                <h2>Tương Lai Của Trà Phú Hội</h2>
+
+                <p>
+                    Hiện nay, với sự hỗ trợ từ chính sách và sự quan tâm ngày càng tăng của người tiêu dùng đối với sản phẩm truyền thống, an toàn, trà Phú Hội đang dần được mở rộng diện tích trồng trọt.
+                </p>
+
+                <p>
+                    Không chỉ dừng lại ở việc bảo tồn, người dân Phú Hội còn nỗ lực nâng cao chất lượng sản phẩm, đa dạng hóa các dòng trà để đáp ứng nhu cầu ngày càng cao của thị trường. Mục tiêu là biến trà Phú Hội thành một thương hiệu mạnh, góp phần thúc đẩy phát triển kinh tế xã hội của địa phương.
+                </p>
+
+                <div class="blog-quote">
+                    Trà Phú Hội không chỉ là thức uống, mà còn là di sản văn hóa, là niềm tự hào của người dân Đồng Nai - một phần không thể thiếu trong bức tranh sản vật đặc trưng của vùng đất này.
+                </div>
+
+                <h2>Kết Luận</h2>
+
+                <p>
+                    Trà Phú Hội là minh chứng cho sự kết hợp hoàn hảo giữa thiên nhiên ban tặng và bàn tay tài hoa của con người. Từ nguồn nước Mạch Bà đặc biệt, qua thổ nhưỡng màu mỡ, đến quy trình chế biến tâm huyết, mỗi tách trà Phú Hội đều mang trong mình câu chuyện về một vùng đất, về những con người yêu quý và gìn giữ di sản truyền thống.
+                </p>
+
+                <p>
+                    Hãy thưởng thức trà Phú Hội để cảm nhận trọn vẹn hương vị của đất trời Đồng Nai - nơi mỗi ngụm trà đều chứa đựng tâm hồn của người làm trà và tinh túy của thiên nhiên.
+                </p>
+
+                <!-- Tags -->
+                <div class="blog-tags">
+                    <span class="blog-tag">#TraPhuHoi</span>
+                    <span class="blog-tag">#DongNai</span>
+                    <span class="blog-tag">#NuocMachBa</span>
+                    <span class="blog-tag">#TraTruyenThong</span>
+                    <span class="blog-tag">#OCOP</span>
+                    <span class="blog-tag">#SanPhamDiaPhương</span>
+                    <span class="blog-tag">#VanHoaTra</span>
+                </div>
+
+                <!-- Share -->
+                <div class="blog-share">
+                    <h3>Chia sẻ bài viết này</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-btn facebook" aria-label="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="share-btn twitter" aria-label="Share on Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="share-btn linkedin" aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="share-btn email" aria-label="Share via Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo footer-logo">
+                        <div class="logo-icon">
+                            <img src="../../src/Logo-trang.png" alt="Trà Phú Hội" class="logo-img">
+                        </div>
+                        <span class="logo-text">Trà Phú Hội</span>
+                    </div>
+                    <p class="footer-desc">Giữ trọn vị trà, trọn vẹn an nhiên.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/share/1AXG1SHCo1/" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="YouTube">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Sản phẩm</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#products">Trà Phú Hội</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Thông tin</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about">Về chúng tôi</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="index.html#contact">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Đăng ký nhận tin</h4>
+                    <p class="newsletter-text">Nhận thông tin về sản phẩm mới và ưu đãi đặc biệt</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Email của bạn" required>
+                        <button type="submit" class="btn btn-primary">Đăng ký</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 VAK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Giỏ hàng của bạn</h3>
+            <button class="cart-close" id="cartClose">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded by JavaScript -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Tổng cộng:</span>
+                <span class="cart-total-amount" id="cartTotal">0đ</span>
+            </div>
+            <button class="btn btn-primary btn-full" id="checkoutBtn">Thanh toán</button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Chat Support Button & Box -->
+    <div class="chat-support">
+        <!-- Nút mở chat -->
+        <button class="chat-toggle-btn" id="chatToggleBtn">
+            <i class="fas fa-headset"></i>
+        </button>
+        
+        <!-- Khung chat -->
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <img src="../../src/logo.png" alt="Trà Phú Hội" class="chat-avatar-img">
+                </div>
+                <h3>Trà Phú Hội</h3>
+                <button class="chat-close" id="chatClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-messages">
+                <div class="chat-message received">
+                    <p>Xin chào Anh/Chị! Em là trợ lý AI của Trà Phú Hội</p>
+                </div>
+                <div class="chat-message received">
+                    <p>Em rất sẵn lòng hỗ trợ Anh/Chị 😊</p>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" placeholder="Nhập tin nhắn...">
+                <button><i class="fas fa-paper-plane"></i></button>
+            </div>
+            
+            <div class="chat-footer">
+                <small>Thông tin chỉ mang tính tham khảo, được trợ vấn bởi <a href="#">Trí Tuệ Nhân Tạo</a></small>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/supabase-config.js"></script>
+    <script src="../../data/products.js"></script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/login.js"></script>
+    <script src="blog.js"></script>
+</body>
+</html>

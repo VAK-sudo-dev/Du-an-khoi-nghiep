@@ -158,21 +158,33 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        productsList.innerHTML = cart.map(item => `
-            <div class="product-item">
-                <div class="product-image">
-                    <img src="../src/Tra-phu-hoi-1.jpg" alt="${item.name}">
-                </div>
-                <div class="product-details">
-                    <h4 class="product-name">${item.name}</h4>
-                    <p class="product-variant">Phân loại: ${item.category || 'Trà'}</p>
-                    <div class="product-bottom">
-                        <span class="product-quantity">x${item.quantity}</span>
-                        <span class="product-price">${formatPrice(item.price)}</span>
+        productsList.innerHTML = cart.map(item => {
+            // Lấy thông tin sản phẩm từ productsData
+            const productInfo = typeof productsData !== 'undefined' 
+                ? productsData.find(p => p.id === item.id)
+                : null;
+            
+            // Sử dụng dữ liệu từ productsData, nếu không có thì dùng dữ liệu từ cart
+            const name = productInfo?.name || item.name;
+            const image = productInfo?.image ? '../' + productInfo.image : '../src/Tra-phu-hoi-1.jpg';
+            const category = productInfo?.category || 'Trà';
+            
+            return `
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="${image}" alt="${name}" onerror="this.src='../src/Hu-tra-phu-hoi.jpg'">
+                    </div>
+                    <div class="product-details">
+                        <h4 class="product-name">${name}</h4>
+                        <p class="product-variant">Phân loại: ${category}</p>
+                        <div class="product-bottom">
+                            <span class="product-quantity">x${item.quantity}</span>
+                            <span class="product-price">${formatPrice(item.price)}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         updateOrderSummary();
     }
