@@ -15,6 +15,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="checkout.css">
+    <link rel="stylesheet" href="address-modal.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -139,6 +140,56 @@
                             <div class="summary-row total">
                                 <span>Tổng thanh toán:</span>
                                 <span class="total-amount">420.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Voucher Card -->
+                    <div class="info-card voucher-card">
+                        <div class="card-header">
+                            <i class="fas fa-ticket-alt"></i>
+                            <h3>Mã giảm giá</h3>
+                        </div>
+                        <div class="card-content">
+                            <!-- Voucher Input -->
+                            <div class="voucher-input-group">
+                                <input 
+                                    type="text" 
+                                    id="voucherInput" 
+                                    class="voucher-input" 
+                                    placeholder="Nhập mã giảm giá"
+                                    maxlength="20"
+                                >
+                                <button class="btn-apply-voucher" id="btnApplyVoucher">
+                                    <i class="fas fa-check"></i> Áp dụng
+                                </button>
+                            </div>
+
+                            <!-- Applied Voucher Display -->
+                            <div class="voucher-applied" id="voucherApplied" style="display: none;">
+                                <div class="voucher-applied-info">
+                                    <div class="voucher-applied-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="voucher-applied-text">
+                                        <span class="voucher-code" id="appliedVoucherCode"></span>
+                                        <span class="voucher-description" id="appliedVoucherDesc"></span>
+                                    </div>
+                                </div>
+                                <button class="btn-remove-voucher" id="btnRemoveVoucher">
+                                    <i class="fas fa-times"></i> Bỏ mã
+                                </button>
+                            </div>
+
+                            <!-- Available Vouchers -->
+                            <div class="available-vouchers" id="availableVouchers">
+                                <div class="available-vouchers-title">
+                                    <i class="fas fa-gift"></i>
+                                    Mã giảm giá có thể dùng
+                                </div>
+                                <div class="voucher-list" id="voucherList">
+                                    <!-- Voucher items will be inserted here dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -274,9 +325,174 @@
         </div>
     </footer>
 
+    <!-- ADDRESS MODAL -->
+    <div class="address-modal-overlay" id="addressModal">
+        <div class="address-modal">
+            <div class="address-modal-header">
+                <h3>Địa chỉ nhận hàng</h3>
+                <button class="modal-close-btn" id="closeAddressModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="address-modal-body">
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" id="addressLoading" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+
+                <!-- Saved Addresses List -->
+                <div class="saved-addresses" id="savedAddressesList"></div>
+
+                <!-- Add New Address Button -->
+                <button class="btn-add-new" id="btnAddNewAddress">
+                    <i class="fas fa-plus"></i>
+                    Thêm địa chỉ mới
+                </button>
+
+                <!-- Address Form (Hidden by default) -->
+                <div class="address-form" id="addressForm" style="display: none;">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark);">Địa chỉ mới</h4>
+                    
+                    <!-- Address Type -->
+                    <div class="form-group full-width">
+                        <label>Loại địa chỉ</label>
+                        <div class="address-type-group">
+                            <button type="button" class="address-type-btn active" data-type="home">
+                                <i class="fas fa-home"></i>
+                                Nhà riêng
+                            </button>
+                            <button type="button" class="address-type-btn" data-type="office">
+                                <i class="fas fa-building"></i>
+                                Văn phòng
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                Họ và tên <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="inputName"
+                                placeholder="Nhập họ và tên"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Số điện thoại <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="tel" 
+                                class="form-control" 
+                                id="inputPhone"
+                                placeholder="Nhập số điện thoại"
+                                pattern="[0-9]{10}"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Province/City Autocomplete -->
+                    <div class="form-group full-width">
+                        <label>
+                            Tỉnh/Thành phố <span class="required">*</span>
+                        </label>
+                        <div class="autocomplete-wrapper">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="inputProvince"
+                                placeholder="Nhập tên tỉnh/thành phố"
+                                autocomplete="off"
+                                required
+                            >
+                            <div class="autocomplete-suggestions" id="provinceSuggestions"></div>
+                        </div>
+                    </div>
+
+                    <!-- District Autocomplete -->
+                    <div class="form-group full-width">
+                        <label>
+                            Quận/Huyện <span class="required">*</span>
+                        </label>
+                        <div class="autocomplete-wrapper">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="inputDistrict"
+                                placeholder="Chọn tỉnh/thành phố trước"
+                                autocomplete="off"
+                                disabled
+                                required
+                            >
+                            <div class="autocomplete-suggestions" id="districtSuggestions"></div>
+                        </div>
+                    </div>
+
+                    <!-- Ward Autocomplete -->
+                    <div class="form-group full-width">
+                        <label>
+                            Phường/Xã <span class="required">*</span>
+                        </label>
+                        <div class="autocomplete-wrapper">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="inputWard"
+                                placeholder="Chọn quận/huyện trước"
+                                autocomplete="off"
+                                disabled
+                                required
+                            >
+                            <div class="autocomplete-suggestions" id="wardSuggestions"></div>
+                        </div>
+                    </div>
+
+                    <!-- Street Address -->
+                    <div class="form-group full-width">
+                        <label>
+                            Địa chỉ cụ thể <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="inputStreet"
+                            placeholder="Số nhà, tên đường"
+                            required
+                        >
+                    </div>
+
+                    <!-- Set as Default -->
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="inputDefault">
+                        <label for="inputDefault">Đặt làm địa chỉ mặc định</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="address-modal-footer" id="addressModalFooter">
+                <button class="btn-modal btn-cancel" id="btnCancelAddress">
+                    Hủy
+                </button>
+                <button class="btn-modal btn-save" id="btnSaveAddress" style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Lưu địa chỉ
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../data/products.js"></script>
+    <script src="VoucherManager.js"></script>
+    <script src="address-manager.js"></script>
+    <script src="voucher-manager.js"></script>
     <script src="checkout.js"></script>
 </body>
 </html>
