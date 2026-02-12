@@ -5,7 +5,7 @@
    
 // ====== CHATBOT CONFIGURATION ======
 const OPENROUTER_API_KEY = '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'; // Thay bằng key của bạn
-const MODEL = 'deepseek/deepseek-r1-0528:free';
+const MODEL = 'arcee-ai/trinity-mini:free';
 
 const SYSTEM_PROMPT = `Bạn là chuyên gia tư vấn trà của Trà Phú Hội- thương hiệu trà cao cấp Phú Hội, Việt Nam.
 
@@ -68,6 +68,8 @@ let currentFilter = 'all';
 let displayedProducts = 1; // Số sản phẩm hiển thị ban đầu
 let isLoggedIn = false; // Thêm state đăng nhập
 let currentUser = null; // Thông tin user
+// Chat request lock to avoid concurrent calls
+let isRequestingAI = false;
 
 // ====== INITIALIZATION ======
 document.addEventListener('DOMContentLoaded', async () => {
@@ -823,61 +825,89 @@ function initChatMessages() {
 // Lưu lịch sử hội thoại
 let conversationHistory = [];
 
-async function sendToDeepSeek(userMessage) {
+async function sendToModel(userMessage) {
     try {
         // Thêm tin nhắn user vào lịch sử
-        conversationHistory.push({
-            role: 'user',
-            content: userMessage
-        });
+        // Prevent concurrent requests
+        if (isRequestingAI) {
+            return '⏳ Vui lòng chờ phản hồi trước khi gửi tin nhắn tiếp theo.';
+        }
 
-        // Gọi OpenRouter API
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'Content-Type': 'application/json',
-                'HTTP-Referer': window.location.href, // Bắt buộc
-                'X-Title': 'TeaVerse Chatbot' // Tùy chọn
-            },
-            body: JSON.stringify({
-                model: MODEL,
-                messages: [
-                    {
-                        role: 'system',
-                        content: SYSTEM_PROMPT
+        conversationHistory.push({ role: 'user', content: userMessage });
+
+        // Ensure we don't send overly long history: keep last 9 messages + system
+        const historyToSend = conversationHistory.slice(-5);
+
+        const payloadBase = {
+            model: MODEL,
+            messages: [ { role: 'system', content: SYSTEM_PROMPT }, ...historyToSend ],
+            temperature: 0.4,
+            max_tokens: 900,
+            top_p: 0.95
+        };
+
+        const maxRetries = 3;
+        let attempt = 0;
+        let lastError = null;
+        isRequestingAI = true;
+
+        while (attempt < maxRetries) {
+            try {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'HTTP-Referer': window.location.href,
+                        'X-Title': 'TeaVerse Chatbot'
                     },
-                    ...conversationHistory
-                ],
-                temperature: 0.7, // Điều chỉnh độ sáng tạo (0-1)
-                max_tokens: 1000,  // Giới hạn độ dài câu trả lời
-                top_p: 0.9
-            })
-        });
+                    body: JSON.stringify(payloadBase)
+                });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.message || 'API Error');
+                if (response.ok) {
+                    const data = await response.json();
+                    const aiResponse = data?.choices?.[0]?.message?.content || '';
+
+                    // Lưu phản hồi vào lịch sử
+                    conversationHistory.push({ role: 'assistant', content: aiResponse });
+
+                    // Trim history
+                    if (conversationHistory.length > 10) {
+                        conversationHistory = conversationHistory.slice(-10);
+                    }
+
+                    isRequestingAI = false;
+                    return aiResponse;
+                }
+
+                // Handle rate limiting by retrying with backoff
+                if (response.status === 429) {
+                    isRequestingAI = false;
+                    return '⏳ Hệ thống đang quá tải. Anh/Chị vui lòng thử lại sau 10–20 giây nhé!';
+                }
+
+
+                // For other non-ok responses, try to extract message
+                const errBody = await response.json().catch(() => ({}));
+                throw new Error(errBody.error?.message || `API Error ${response.status}`);
+
+            } catch (err) {
+                lastError = err;
+                // If we've exhausted retries, break
+                attempt += 1;
+                if (attempt >= maxRetries) break;
+                const backoffMs = 500 * Math.pow(2, attempt);
+                await new Promise(r => setTimeout(r, backoffMs));
+            }
         }
 
-        const data = await response.json();
-        const aiResponse = data.choices[0].message.content;
-
-        // Lưu phản hồi vào lịch sử
-        conversationHistory.push({
-            role: 'assistant',
-            content: aiResponse
-        });
-
-        // Giữ lịch sử không quá dài (10 tin nhắn gần nhất)
-        if (conversationHistory.length > 10) {
-            conversationHistory = conversationHistory.slice(-10);
-        }
-
-        return aiResponse;
+        isRequestingAI = false;
+        console.error('Gemma Error after retries:', lastError);
+        return '😔 Em đang gặp chút vấn đề kỹ thuật hoặc đã vượt hạn mức yêu cầu. Vui lòng thử lại sau vài giây.';
 
     } catch (error) {
-        console.error('DeepSeek Error:', error);
+        console.error('Gemma Error (unexpected):', error);
+        isRequestingAI = false;
         return '😔 Em đang gặp chút vấn đề kỹ thuật. Anh/chị có thể thử lại hoặc gọi cho em qua số 0798 130 810 nhé!';
     }
 }
@@ -885,6 +915,11 @@ async function sendToDeepSeek(userMessage) {
 // Hiển thị tin nhắn trong chat
 function displayMessage(message, isUser = false) {
     const chatMessages = document.querySelector('.chat-messages');
+    if (!chatMessages) {
+        console.error('displayMessage: .chat-messages container not found');
+        return;
+    }
+    console.log('displayMessage', { isUser, message });
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${isUser ? 'sent' : 'received'}`;
     
@@ -898,13 +933,20 @@ function displayMessage(message, isUser = false) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Hiển thị typing indicator
+// Hiển thị typing indicator với animation động
 function showTypingIndicator() {
     const chatMessages = document.querySelector('.chat-messages');
     const typingDiv = document.createElement('div');
     typingDiv.className = 'chat-message received typing-indicator';
     typingDiv.id = 'typingIndicator';
-    typingDiv.innerHTML = `<p>Đang soạn tin...</p>`;
+    typingDiv.innerHTML = `
+        <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <p class="typing-text">Đang suy nghĩ...</p>
+    `;
     chatMessages.appendChild(typingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -915,22 +957,7 @@ function hideTypingIndicator() {
     if (indicator) indicator.remove();
 }
 
-// Xử lý gửi tin nhắn
-async function handleSendMessage() {
-    const message = chatInput.value.trim();
-    
-    if (!message) return;
-    
-    displayMessage(message, true);
-    chatInput.value = '';
-    
-    showTypingIndicator();
-    
-    const aiResponse = await sendToDeepSeek(message);
-    
-    hideTypingIndicator();
-    displayMessage(aiResponse, false);
-}
+// (handler implementation moved later to ensure single definition)
 
 // ===== EVENT LISTENERS CHO CHAT =====
 
@@ -988,16 +1015,21 @@ async function handleSendMessage() {
         return;
     }
     
+    console.log('handleSendMessage - user:', message);
     displayMessage(message, true);
     chatInput.value = '';
     chatInput.disabled = true; // Disable khi đang xử lý
     
     showTypingIndicator();
     
-    const aiResponse = await sendToDeepSeek(message);
-    
+    const aiResponse = await sendToModel(message);
+    console.log('handleSendMessage - aiResponse:', aiResponse);
     hideTypingIndicator();
-    displayMessage(aiResponse, false);
+    // Ensure we always show something
+    const reply = (typeof aiResponse === 'string' && aiResponse.trim().length > 0)
+        ? aiResponse
+        : 'Xin lỗi, em chưa nhận được phản hồi. Vui lòng thử lại.';
+    displayMessage(reply, false);
     
     chatInput.disabled = false;
     chatInput.focus();
