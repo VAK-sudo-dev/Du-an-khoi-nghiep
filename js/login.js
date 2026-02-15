@@ -370,6 +370,70 @@ const FacebookAuth = {
 };
 
 // ========================================
+// GOOGLE AUTHENTICATION
+// ========================================
+
+const GoogleAuth = {
+    // Đăng nhập với Google qua Supabase OAuth
+    loginWithSupabase: async () => {
+        try {
+            console.log('🔐 Bắt đầu đăng nhập Google...');
+            
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin + '/index.html',
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    }
+                }
+            });
+
+            if (error) {
+                console.error('❌ Lỗi Google login:', error);
+                Toast.error('Không thể đăng nhập bằng Google');
+                return;
+            }
+
+            console.log('✅ Đang chuyển hướng đến Google...');
+            
+        } catch (error) {
+            console.error('❌ Lỗi Google login:', error);
+            Toast.error('Có lỗi xảy ra khi đăng nhập');
+        }
+    },
+
+    // Xử lý callback sau khi Google redirect về
+    handleCallback: async () => {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        
+        if (error) {
+            console.error('❌ Lỗi lấy session:', error);
+            return null;
+        }
+
+        if (session) {
+            console.log('✅ Đăng nhập Google thành công:', session.user);
+            
+            // Lưu thông tin user
+            localStorage.setItem('teaUser', JSON.stringify({
+                id: session.user.id,
+                email: session.user.email,
+                name: session.user.user_metadata?.full_name || session.user.email,
+                avatar: session.user.user_metadata?.avatar_url,
+                provider: 'google',
+                loginAt: Date.now()
+            }));
+            
+            return session.user;
+        }
+
+        return null;
+    }
+};
+
+// ========================================
 // CHUYỂN ĐỔI FORM (FORM SWITCHING)
 // ========================================
 
@@ -811,14 +875,41 @@ const initEventListeners = () => {
             await FacebookAuth.loginWithSupabase();
         });
     });
+
+    // Google login buttons
+    const googleButtons = document.querySelectorAll('.social-btn[aria-label="Google"]');
+    googleButtons.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await GoogleAuth.loginWithSupabase();
+        });
+    });
 };
 
 // ========================================
 // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
 // ========================================
 
-// Call SupabaseAuth.currentUser(), nếu có user thì ghi log/redirect tùy ứng dụng.
 const checkLoginStatus = async () => {
+    // Kiểm tra nếu đang ở callback URL (có access_token trong URL)
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    if (hashParams.get('access_token')) {
+        console.log('🔄 Đang xử lý OAuth callback...');
+        
+        const user = await GoogleAuth.handleCallback();
+        if (user) {
+            Toast.success('Đăng nhập Google thành công!');
+            FormSwitcher.showSuccess('Chào mừng bạn đến với Trà Phú Hội 🌿');
+            
+            // Redirect về trang chủ sau 1.5 giây
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 1500);
+            return;
+        }
+    }
+
+    // Kiểm tra session hiện tại
     const user = await SupabaseAuth.currentUser();
     if (user) {
         console.log('✅ User đang đăng nhập:', user);
