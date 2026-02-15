@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chính Sách Quyền Riêng Tư | Trà Phú Hội</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           CSS VARIABLES - Dễ dàng tùy chỉnh theme
+           ============================================ */
+        :root {
+            --color-bg: #FFFFFF;
+            --color-bg-secondary: #F0FDF4;
+            --color-text: #1F2937;
+            --color-text-secondary: #6B7280;
+            --color-heading: #111827;
+            --color-accent: #3B82F6;
+            --color-accent-hover: #2563EB;
+            --color-border: #E5E7EB;
+            --color-sidebar-bg: #F9FAFB;
+            --color-green-light: #ECFDF5;
+            --color-green-accent: #10B981;
+            --color-shadow: rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #111827;
+            --color-bg-secondary: #1F2937;
+            --color-text: #D1D5DB;
+            --color-text-secondary: #9CA3AF;
+            --color-heading: #F9FAFB;
+            --color-accent: #60A5FA;
+            --color-accent-hover: #3B82F6;
+            --color-border: #374151;
+            --color-sidebar-bg: #1F2937;
+            --color-green-light: #065F46;
+            --color-green-accent: #34D399;
+            --color-shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        /* ============================================
+           BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            transition: var(--transition);
+        }
+
+        /* ============================================
+           HEADER STYLES
+           ============================================ */
+        header {
+            background: var(--color-bg);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] header {
+            background-color: rgba(17, 24, 39, 0.9);
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #10B981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-heading);
+        }
+
+        .brand-name span {
+            color: var(--color-green-accent);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--color-accent);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-accent);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: var(--color-sidebar-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            font-size: 1.25rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-bg-secondary);
+            transform: translateY(-1px);
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 50%, #A7F3D0 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .hero {
+            background: linear-gradient(135deg, #065F46 0%, #047857 50%, #059669 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-heading);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .update-date {
+            color: var(--color-text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* ============================================
+           MAIN CONTAINER
+           ============================================ */
+        .main-container {
+            max-width: 1280px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 4rem;
+        }
+
+        /* ============================================
+           SIDEBAR - STICKY TABLE OF CONTENTS
+           ============================================ */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            background: var(--color-sidebar-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 1px 3px var(--color-shadow);
+        }
+
+        .sidebar h3 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.25rem;
+        }
+
+        .toc-list a {
+            display: block;
+            color: var(--color-text);
+            text-decoration: none;
+            padding: 0.625rem 0.875rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-size: 0.9375rem;
+        }
+
+        .toc-list a:hover {
+            background: var(--color-bg);
+            color: var(--color-accent);
+            transform: translateX(4px);
+        }
+
+        .toc-list a.active {
+            background: var(--color-accent);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        /* ============================================
+           MOBILE TOC DROPDOWN
+           ============================================ */
+        .mobile-toc {
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-toc-toggle {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--color-sidebar-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            color: var(--color-text);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .mobile-toc-toggle:hover {
+            background: var(--color-bg-secondary);
+        }
+
+        .mobile-toc-toggle .arrow {
+            transition: transform 0.3s;
+        }
+
+        .mobile-toc-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .mobile-toc-content {
+            display: none;
+            margin-top: 0.5rem;
+            background: var(--color-sidebar-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-toc-content.show {
+            display: block;
+        }
+
+        /* ============================================
+           CONTENT AREA
+           ============================================ */
+        .content {
+            background: var(--color-bg);
+            border-radius: 16px;
+            padding: 3rem;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 1px 3px var(--color-shadow);
+        }
+
+        .content section {
+            margin-bottom: 3.5rem;
+            scroll-margin-top: 120px;
+        }
+
+        .content section:last-child {
+            margin-bottom: 0;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-heading);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--color-green-accent);
+            letter-spacing: -0.01em;
+        }
+
+        .content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-heading);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .content p {
+            margin-bottom: 1.25rem;
+            color: var(--color-text);
+        }
+
+        .content ul, .content ol {
+            margin-left: 1.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .content li {
+            margin-bottom: 0.75rem;
+            color: var(--color-text);
+            padding-left: 0.5rem;
+        }
+
+        .content strong {
+            color: var(--color-heading);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           HIGHLIGHT BOXES
+           ============================================ */
+        .highlight-box {
+            background: var(--color-green-light);
+            border-left: 4px solid var(--color-green-accent);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-box {
+            background: var(--color-bg-secondary);
+            border-left: 4px solid var(--color-accent);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        /* ============================================
+           UTILITY BUTTONS
+           ============================================ */
+        .utility-buttons {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 999;
+        }
+
+        .utility-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px var(--color-shadow);
+            transition: var(--transition);
+        }
+
+        .utility-btn:hover {
+            background: var(--color-accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .utility-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .back-to-top {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            background: var(--color-bg-secondary);
+            border-top: 1px solid var(--color-border);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-container p {
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent-hover);
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .mobile-toc {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .header-container {
+                padding: 1rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.875rem;
+            }
+
+            .content {
+                padding: 2rem 1.5rem;
+            }
+
+            .content h2 {
+                font-size: 1.75rem;
+            }
+
+            .utility-buttons {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .utility-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+        }
+
+        /* ============================================
+           PRINT STYLES
+           ============================================ */
+        @media print {
+            .sidebar, 
+            .mobile-toc, 
+            .utility-buttons, 
+            header nav, 
+            .theme-toggle,
+            footer .footer-links {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .hero {
+                background: white;
+                padding: 2rem 0;
+            }
+
+            .content {
+                border: none;
+                padding: 0;
+                box-shadow: none;
+            }
+
+            .content section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         HEADER
+         ============================================ -->
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">🍵</div>
+                <span class="brand-name">Trà <span>Phú Hội</span></span>
+            </div>
+            <nav>
+                <a href="privacy-policy.html">Quyền Riêng Tư</a>
+                <a href="terms-of-service.html">Điều Khoản</a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Chuyển đổi giao diện">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============================================
+         HERO SECTION
+         ============================================ -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Chính Sách Quyền Riêng Tư</h1>
+            <p class="update-date">Cập nhật lần cuối: 15 tháng 2, 2026</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         MOBILE TABLE OF CONTENTS
+         ============================================ -->
+    <div class="mobile-toc" style="max-width: 1280px; margin: 2rem auto; padding: 0 2rem;">
+        <button class="mobile-toc-toggle" id="mobileTocToggle" aria-expanded="false">
+            <span>📋 Mục lục nhanh</span>
+            <span class="arrow">▼</span>
+        </button>
+        <div class="mobile-toc-content" id="mobileTocContent">
+            <ul class="toc-list">
+                <li><a href="#thong-tin-thu-thap">Thông tin thu thập</a></li>
+                <li><a href="#muc-dich-su-dung">Mục đích sử dụng</a></li>
+                <li><a href="#chia-se-du-lieu">Chia sẻ dữ liệu</a></li>
+                <li><a href="#luu-tru-bao-mat">Lưu trữ và bảo mật</a></li>
+                <li><a href="#quyen-nguoi-dung">Quyền người dùng</a></li>
+                <li><a href="#cookies">Cookies</a></li>
+                <li><a href="#thay-doi">Thay đổi chính sách</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MAIN CONTENT CONTAINER
+         ============================================ -->
+    <div class="main-container">
+        <!-- SIDEBAR - DESKTOP TOC -->
+        <aside class="sidebar">
+            <h3>Mục Lục</h3>
+            <ul class="toc-list">
+                <li><a href="#thong-tin-thu-thap" class="toc-link">Thông tin thu thập</a></li>
+                <li><a href="#muc-dich-su-dung" class="toc-link">Mục đích sử dụng</a></li>
+                <li><a href="#chia-se-du-lieu" class="toc-link">Chia sẻ dữ liệu</a></li>
+                <li><a href="#luu-tru-bao-mat" class="toc-link">Lưu trữ và bảo mật</a></li>
+                <li><a href="#quyen-nguoi-dung" class="toc-link">Quyền người dùng</a></li>
+                <li><a href="#cookies" class="toc-link">Cookies</a></li>
+                <li><a href="#thay-doi" class="toc-link">Thay đổi chính sách</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content">
+            <!-- Giới thiệu -->
+            <div class="highlight-box">
+                <p><strong>Cam kết của chúng tôi:</strong> Trà Phú Hội cam kết bảo vệ quyền riêng tư và dữ liệu cá nhân của khách hàng khi sử dụng website và các dịch vụ liên quan. Chính sách này giải thích chi tiết cách chúng tôi thu thập, sử dụng, lưu trữ và bảo vệ thông tin của bạn.</p>
+            </div>
+
+            <!-- Section 1 -->
+            <section id="thong-tin-thu-thap">
+                <h2>1. Thông tin chúng tôi thu thập</h2>
+                
+                <p>Khi bạn sử dụng website Trà Phú Hội hoặc đăng nhập bằng tài khoản Facebook, chúng tôi có thể thu thập các loại thông tin sau:</p>
+
+                <h3>1.1. Thông tin từ Facebook (khi đăng nhập)</h3>
+                <p>Khi bạn chọn đăng nhập bằng tài khoản Facebook, chúng tôi sẽ nhận được:</p>
+                <ul>
+                    <li><strong>Họ và tên:</strong> Để xác định danh tính và cá nhân hóa trải nghiệm</li>
+                    <li><strong>Địa chỉ email:</strong> Để liên lạc và gửi thông tin quan trọng</li>
+                    <li><strong>Ảnh đại diện:</strong> Hiển thị hình ảnh cá nhân trong tài khoản</li>
+                    <li><strong>Facebook ID:</strong> Mã định danh duy nhất để xác thực tài khoản</li>
+                </ul>
+
+                <h3>1.2. Thông tin do bạn cung cấp trực tiếp</h3>
+                <p>Trong quá trình sử dụng dịch vụ, bạn có thể cung cấp thêm:</p>
+                <ul>
+                    <li><strong>Số điện thoại:</strong> Để liên hệ giao hàng và hỗ trợ khách hàng</li>
+                    <li><strong>Địa chỉ giao hàng:</strong> Để vận chuyển đơn hàng đến đúng nơi</li>
+                    <li><strong>Thông tin đơn hàng:</strong> Chi tiết sản phẩm, số lượng, ghi chú đặc biệt</li>
+                    <li><strong>Phản hồi và đánh giá:</strong> Ý kiến về sản phẩm và dịch vụ</li>
+                </ul>
+
+                <h3>1.3. Thông tin tự động thu thập</h3>
+                <p>Khi bạn truy cập website, hệ thống tự động ghi nhận:</p>
+                <ul>
+                    <li><strong>Địa chỉ IP:</strong> Để xác định vị trí địa lý và bảo mật</li>
+                    <li><strong>Thông tin trình duyệt:</strong> Loại trình duyệt, phiên bản, hệ điều hành</li>
+                    <li><strong>Thiết bị:</strong> Loại thiết bị (desktop, mobile, tablet)</li>
+                    <li><strong>Cookies:</strong> Dữ liệu nhỏ lưu trữ trên trình duyệt của bạn</li>
+                    <li><strong>Dữ liệu phân tích:</strong> Thời gian truy cập, trang đã xem, hành vi duyệt web</li>
+                </ul>
+            </section>
+
+            <!-- Section 2 -->
+            <section id="muc-dich-su-dung">
+                <h2>2. Mục đích sử dụng thông tin</h2>
+                
+                <p>Chúng tôi sử dụng thông tin được thu thập cho các mục đích sau:</p>
+
+                <h3>2.1. Xác thực và quản lý tài khoản</h3>
+                <ul>
+                    <li>Tạo và quản lý tài khoản người dùng</li>
+                    <li>Xác thực danh tính khi đăng nhập</li>
+                    <li>Bảo vệ tài khoản khỏi truy cập trái phép</li>
+                    <li>Cho phép bạn quản lý thông tin cá nhân</li>
+                </ul>
+
+                <h3>2.2. Xử lý đơn hàng và giao hàng</h3>
+                <ul>
+                    <li>Xác nhận và xử lý đơn hàng của bạn</li>
+                    <li>Liên hệ về tình trạng đơn hàng</li>
+                    <li>Sắp xếp giao hàng đến địa chỉ của bạn</li>
+                    <li>Xử lý thanh toán và xuất hóa đơn</li>
+                </ul>
+
+                <h3>2.3. Hỗ trợ khách hàng</h3>
+                <ul>
+                    <li>Phản hồi câu hỏi và yêu cầu của bạn</li>
+                    <li>Giải quyết vấn đề kỹ thuật</li>
+                    <li>Xử lý khiếu nại và hoàn trả</li>
+                    <li>Cải thiện dịch vụ dựa trên phản hồi</li>
+                </ul>
+
+                <h3>2.4. Cải thiện trải nghiệm website</h3>
+                <ul>
+                    <li>Phân tích cách người dùng tương tác với website</li>
+                    <li>Tối ưu hóa giao diện và tính năng</li>
+                    <li>Cá nhân hóa nội dung phù hợp với sở thích</li>
+                    <li>Đề xuất sản phẩm liên quan</li>
+                </ul>
+
+                <h3>2.5. Marketing và khuyến mãi</h3>
+                <p>Chỉ khi bạn đồng ý, chúng tôi sẽ:</p>
+                <ul>
+                    <li>Gửi thông tin về chương trình khuyến mãi</li>
+                    <li>Thông báo sản phẩm mới</li>
+                    <li>Gửi newsletter về ngành trà và văn hóa trà đạo</li>
+                    <li>Mời tham gia sự kiện và chương trình đặc biệt</li>
+                </ul>
+
+                <div class="info-box">
+                    <p><strong>Lưu ý:</strong> Bạn có thể hủy đăng ký nhận email marketing bất kỳ lúc nào bằng cách nhấn vào liên kết "Hủy đăng ký" ở cuối mỗi email hoặc liên hệ với chúng tôi.</p>
+                </div>
+            </section>
+
+            <!-- Section 3 -->
+            <section id="chia-se-du-lieu">
+                <h2>3. Chia sẻ dữ liệu với bên thứ ba</h2>
+                
+                <div class="highlight-box">
+                    <p><strong>Cam kết quan trọng:</strong> Chúng tôi KHÔNG bán hoặc trao đổi dữ liệu cá nhân của bạn cho bất kỳ bên thứ ba nào vì mục đích thương mại.</p>
+                </div>
+
+                <p>Tuy nhiên, dữ liệu của bạn có thể được chia sẻ với các đối tác sau để hoàn thành dịch vụ:</p>
+
+                <h3>3.1. Đơn vị vận chuyển</h3>
+                <p>Chúng tôi cung cấp thông tin cần thiết (tên, số điện thoại, địa chỉ) cho đối tác vận chuyển để giao hàng đến bạn. Các đối tác này cam kết bảo mật thông tin theo thỏa thuận.</p>
+
+                <h3>3.2. Cổng thanh toán</h3>
+                <p>Khi bạn thanh toán trực tuyến, thông tin thanh toán được xử lý bởi các cổng thanh toán bảo mật đã được chứng nhận (ví dụ: VNPay, Momo, ZaloPay). Chúng tôi không lưu trữ thông tin thẻ tín dụng hoặc tài khoản ngân hàng của bạn.</p>
+
+                <h3>3.3. Nhà cung cấp hạ tầng kỹ thuật</h3>
+                <p>Dữ liệu được lưu trữ trên các nền tảng đám mây bảo mật như Supabase, AWS hoặc Google Cloud. Các nhà cung cấp này tuân thủ các tiêu chuẩn bảo mật quốc tế.</p>
+
+                <h3>3.4. Theo yêu cầu pháp luật</h3>
+                <p>Chúng tôi có thể tiết lộ thông tin khi:</p>
+                <ul>
+                    <li>Được yêu cầu bởi cơ quan có thẩm quyền</li>
+                    <li>Tuân thủ trát đòi hầu tòa hoặc quyết định tòa án</li>
+                    <li>Bảo vệ quyền lợi hợp pháp của Trà Phú Hội</li>
+                    <li>Ngăn chặn gian lận hoặc vi phạm pháp luật</li>
+                </ul>
+            </section>
+
+            <!-- Section 4 -->
+            <section id="luu-tru-bao-mat">
+                <h2>4. Lưu trữ và bảo mật thông tin</h2>
+                
+                <h3>4.1. Biện pháp bảo mật kỹ thuật</h3>
+                <p>Chúng tôi áp dụng các biện pháp bảo mật tiên tiến để bảo vệ dữ liệu của bạn:</p>
+                <ul>
+                    <li><strong>Mã hóa SSL/TLS:</strong> Tất cả dữ liệu truyền tải được mã hóa</li>
+                    <li><strong>Mã hóa cơ sở dữ liệu:</strong> Dữ liệu nhạy cảm được mã hóa khi lưu trữ</li>
+                    <li><strong>Tường lửa:</strong> Hệ thống tường lửa đa lớp bảo vệ máy chủ</li>
+                    <li><strong>Giám sát bảo mật:</strong> Theo dõi và cảnh báo các hoạt động bất thường 24/7</li>
+                    <li><strong>Kiểm tra bảo mật định kỳ:</strong> Đánh giá lỗ hổng và cập nhật bảo mật thường xuyên</li>
+                </ul>
+
+                <h3>4.2. Kiểm soát truy cập</h3>
+                <ul>
+                    <li>Chỉ nhân viên được ủy quyền mới có quyền truy cập dữ liệu</li>
+                    <li>Sử dụng xác thực đa yếu tố (MFA) cho tài khoản quản trị</li>
+                    <li>Ghi nhật ký đầy đủ mọi hoạt động truy cập dữ liệu</li>
+                    <li>Đào tạo nhân viên về bảo mật và quyền riêng tư</li>
+                </ul>
+
+                <h3>4.3. Thời gian lưu trữ</h3>
+                <p>Chúng tôi chỉ lưu trữ dữ liệu của bạn trong thời gian cần thiết:</p>
+                <ul>
+                    <li><strong>Dữ liệu tài khoản:</strong> Cho đến khi bạn yêu cầu xóa tài khoản</li>
+                    <li><strong>Dữ liệu đơn hàng:</strong> Tối thiểu 3 năm theo quy định pháp luật về hóa đơn</li>
+                    <li><strong>Dữ liệu marketing:</strong> Cho đến khi bạn hủy đăng ký</li>
+                    <li><strong>Nhật ký hệ thống:</strong> 12 tháng để phân tích và bảo mật</li>
+                </ul>
+
+                <div class="info-box">
+                    <p><strong>Trách nhiệm của bạn:</strong> Vui lòng bảo mật thông tin đăng nhập của mình. Không chia sẻ mật khẩu với người khác và đăng xuất sau khi sử dụng trên thiết bị chung.</p>
+                </div>
+            </section>
+
+            <!-- Section 5 -->
+            <section id="quyen-nguoi-dung">
+                <h2>5. Quyền của người dùng</h2>
+                
+                <p>Theo Luật Bảo vệ Dữ liệu Cá nhân, bạn có các quyền sau:</p>
+
+                <h3>5.1. Quyền yêu cầu xem dữ liệu</h3>
+                <p>Bạn có quyền yêu cầu xem tất cả dữ liệu cá nhân mà chúng tôi đang lưu giữ về bạn. Chúng tôi sẽ cung cấp bản sao dữ liệu trong vòng 15 ngày làm việc.</p>
+
+                <h3>5.2. Quyền yêu cầu chỉnh sửa</h3>
+                <p>Nếu phát hiện thông tin không chính xác hoặc đã lỗi thời, bạn có quyền yêu cầu cập nhật hoặc sửa đổi. Bạn cũng có thể tự chỉnh sửa trong phần cài đặt tài khoản.</p>
+
+                <h3>5.3. Quyền yêu cầu xóa tài khoản</h3>
+                <p>Bạn có quyền yêu cầu xóa tài khoản và dữ liệu cá nhân bất kỳ lúc nào. Lưu ý rằng một số dữ liệu có thể được giữ lại theo yêu cầu pháp luật (ví dụ: hóa đơn).</p>
+
+                <h3>5.4. Quyền rút lại quyền đăng nhập Facebook</h3>
+                <p>Bạn có thể rút lại quyền truy cập Facebook bất kỳ lúc nào thông qua:</p>
+                <ul>
+                    <li>Cài đặt tài khoản Facebook → Ứng dụng và website → Xóa Trà Phú Hội</li>
+                    <li>Hoặc liên hệ với chúng tôi để hỗ trợ</li>
+                </ul>
+
+                <h3>5.5. Quyền phản đối xử lý dữ liệu</h3>
+                <p>Bạn có thể phản đối việc sử dụng dữ liệu của mình cho mục đích marketing hoặc phân tích. Điều này không ảnh hưởng đến các chức năng cơ bản của dịch vụ.</p>
+
+                <h3>5.6. Cách thực hiện quyền</h3>
+                <p>Để thực hiện các quyền trên, vui lòng:</p>
+                <ul>
+                    <li>📧 Gửi email đến: <strong>anhkhoi130810@gmail.com</strong></li>
+                    <li>📞 Hotline: <strong>0798 130 810</strong> (8:00 - 20:00 hàng ngày)</li>
+                    <li>💬 Chat trực tuyến trên website</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Thời gian xử lý:</strong> Chúng tôi cam kết phản hồi yêu cầu của bạn trong vòng 15 ngày làm việc. Trong trường hợp phức tạp, chúng tôi sẽ thông báo và kéo dài tối đa thêm 15 ngày.</p>
+                </div>
+            </section>
+
+            <!-- Section 6 -->
+            <section id="cookies">
+                <h2>6. Cookies và công nghệ theo dõi</h2>
+                
+                <h3>6.1. Cookie là gì?</h3>
+                <p>Cookie là các tệp văn bản nhỏ được lưu trữ trên thiết bị của bạn khi bạn truy cập website. Chúng giúp website ghi nhớ thông tin về chuyến thăm của bạn.</p>
+
+                <h3>6.2. Các loại cookie chúng tôi sử dụng</h3>
+                <ul>
+                    <li><strong>Cookie cần thiết:</strong> Không thể tắt, cần để website hoạt động (đăng nhập, giỏ hàng, bảo mật)</li>
+                    <li><strong>Cookie hiệu suất:</strong> Thu thập thông tin về cách bạn sử dụng website (Google Analytics, Facebook Pixel)</li>
+                    <li><strong>Cookie chức năng:</strong> Ghi nhớ lựa chọn của bạn (ngôn ngữ, giao diện, khu vực)</li>
+                    <li><strong>Cookie quảng cáo:</strong> Hiển thị quảng cáo phù hợp dựa trên sở thích của bạn</li>
+                </ul>
+
+                <h3>6.3. Mục đích sử dụng cookie</h3>
+                <ul>
+                    <li><strong>Ghi nhớ đăng nhập:</strong> Để bạn không phải đăng nhập lại mỗi lần truy cập</li>
+                    <li><strong>Phân tích hành vi:</strong> Hiểu cách người dùng tương tác với website</li>
+                    <li><strong>Cải thiện hiệu suất:</strong> Tối ưu hóa tốc độ tải trang</li>
+                    <li><strong>Cá nhân hóa trải nghiệm:</strong> Hiển thị nội dung phù hợp với bạn</li>
+                </ul>
+
+                <h3>6.4. Quản lý cookie</h3>
+                <p>Bạn có thể kiểm soát cookie thông qua:</p>
+                <ul>
+                    <li><strong>Cài đặt trình duyệt:</strong> Chrome, Firefox, Safari đều cho phép chặn hoặc xóa cookie</li>
+                    <li><strong>Công cụ trên website:</strong> Sử dụng bảng cài đặt cookie của chúng tôi</li>
+                    <li><strong>Chế độ ẩn danh:</strong> Sử dụng chế độ duyệt web riêng tư</li>
+                </ul>
+
+                <div class="info-box">
+                    <p><strong>Lưu ý:</strong> Việc tắt cookie có thể ảnh hưởng đến một số tính năng của website như đăng nhập tự động, giỏ hàng, hoặc cá nhân hóa nội dung.</p>
+                </div>
+            </section>
+
+            <!-- Section 7 -->
+            <section id="thay-doi">
+                <h2>7. Thay đổi chính sách quyền riêng tư</h2>
+                
+                <p>Chúng tôi có thể cập nhật chính sách này theo thời gian để phản ánh:</p>
+                <ul>
+                    <li>Thay đổi trong hoạt động kinh doanh hoặc mô hình dịch vụ</li>
+                    <li>Yêu cầu pháp lý mới hoặc quy định của cơ quan có thẩm quyền</li>
+                    <li>Cải thiện thực hành bảo vệ dữ liệu và quyền riêng tư</li>
+                    <li>Phản hồi từ người dùng và các bên liên quan</li>
+                </ul>
+
+                <h3>7.1. Thông báo thay đổi</h3>
+                <p>Khi có thay đổi quan trọng ảnh hưởng đến quyền lợi của bạn, chúng tôi sẽ:</p>
+                <ul>
+                    <li>📧 Gửi email thông báo đến địa chỉ đã đăng ký</li>
+                    <li>🔔 Hiển thị thông báo nổi bật trên website và ứng dụng</li>
+                    <li>📱 Gửi thông báo push (nếu bạn đã cài đặt app)</li>
+                    <li>✅ Yêu cầu chấp nhận lại chính sách mới (nếu thay đổi lớn)</li>
+                </ul>
+
+                <h3>7.2. Lịch sử thay đổi</h3>
+                <p>Bạn có thể xem lịch sử các phiên bản chính sách trước đây tại trang này. Ngày cập nhật cuối cùng luôn được hiển thị ở đầu tài liệu.</p>
+
+                <div class="highlight-box">
+                    <p><strong>Khuyến nghị:</strong> Chúng tôi khuyến khích bạn xem lại chính sách này định kỳ (ít nhất 6 tháng một lần) để nắm rõ cách chúng tôi bảo vệ thông tin của bạn.</p>
+                </div>
+            </section>
+
+            <!-- Liên hệ -->
+            <div class="info-box" style="margin-top: 3rem;">
+                <h3 style="margin-top: 0;">📞 Liên hệ với chúng tôi</h3>
+                <p>Nếu bạn có bất kỳ câu hỏi, thắc mắc hoặc yêu cầu nào về chính sách quyền riêng tư này, vui lòng liên hệ:</p>
+                <p><strong>Trà Phú Hội - Bộ phận Bảo vệ Dữ liệu</strong></p>
+                <p>📧 Email: <strong>anhkhoi130810@gmail.com</strong></p>
+                <p>📞 Hotline: <strong>0798 130 810</strong> (8:00 - 20:00 hàng ngày)</p>
+                <p>📍 Địa chỉ: <strong>Xã Phú Hội, Huyện Nhơn Trạch, Đồng Nai</strong></p>
+                <p>🌐 Website: <strong>https://traphuhoi.netlify.app</strong></p>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================
+         UTILITY BUTTONS
+         ============================================ -->
+    <div class="utility-buttons">
+        <button class="utility-btn" id="printBtn" title="In trang này" onclick="window.print()">
+            🖨️
+        </button>
+        <button class="utility-btn back-to-top" id="backToTop" title="Lên đầu trang">
+            ↑
+        </button>
+    </div>
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 Trà Phú Hội. Tất cả quyền được bảo lưu.</p>
+            <div class="footer-links">
+                <a href="privacy-policy.html">Chính Sách Quyền Riêng Tư</a>
+                <a href="terms-of-service.html">Điều Khoản Dịch Vụ</a>
+                <a href="mailto:support@traphuhoi.com">Liên Hệ</a>
+                <a href="https://traphuhoi.com">Website Chính</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // ========================================
+        // THEME TOGGLE (Dark Mode)
+        // ========================================
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        // Kiểm tra theme đã lưu hoặc mặc định là 'light'
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const theme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateThemeIcon(theme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
+
+        // ========================================
+        // SMOOTH SCROLL
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Đóng mobile TOC nếu đang mở
+                    const mobileTocContent = document.getElementById('mobileTocContent');
+                    const mobileTocToggle = document.getElementById('mobileTocToggle');
+                    if (mobileTocContent.classList.contains('show')) {
+                        mobileTocContent.classList.remove('show');
+                        mobileTocToggle.classList.remove('open');
+                        mobileTocToggle.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+        });
+
+        // ========================================
+        // SCROLLSPY - Active state in TOC
+        // ========================================
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        function highlightTOC() {
+            let current = '';
+            const scrollPosition = window.pageYOffset;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollPosition >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightTOC);
+        highlightTOC(); // Chạy khi tải trang
+
+        // ========================================
+        // BACK TO TOP BUTTON
+        // ========================================
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 400) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ========================================
+        // MOBILE TOC TOGGLE
+        // ========================================
+        const mobileTocToggle = document.getElementById('mobileTocToggle');
+        const mobileTocContent = document.getElementById('mobileTocContent');
+
+        mobileTocToggle.addEventListener('click', () => {
+            const isOpen = mobileTocContent.classList.toggle('show');
+            mobileTocToggle.classList.toggle('open');
+            mobileTocToggle.setAttribute('aria-expanded', isOpen);
+        });
+
+        // Đóng mobile TOC khi click bên ngoài
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.mobile-toc')) {
+                mobileTocContent.classList.remove('show');
+                mobileTocToggle.classList.remove('open');
+                mobileTocToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
+</body>
+</html>
