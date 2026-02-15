@@ -340,6 +340,34 @@ const SupabaseAuth = {
     }
 };
 
+// ========================================
+// FACEBOOK LOGIN HANDLER (SUPABASE OAUTH)
+// ========================================
+
+const FacebookAuth = {
+    // Đăng nhập qua Supabase OAuth (redirect)
+    loginWithSupabase: async () => {
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'facebook',
+                options: {
+                    redirectTo: window.location.origin + '/index.html'
+                }
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            // Supabase sẽ tự động redirect sang Facebook
+            // Sau khi đăng nhập xong, Facebook sẽ redirect về redirectTo
+
+        } catch (error) {
+            console.error('❌ Facebook login error:', error);
+            Toast.error('Không thể kết nối Facebook. Vui lòng thử lại!');
+        }
+    }
+};
 
 // ========================================
 // CHUYỂN ĐỔI FORM (FORM SWITCHING)
@@ -774,6 +802,15 @@ const initEventListeners = () => {
             Toast.info('Chức năng "Quên mật khẩu" đang được phát triển');
         });
     }
+
+    // Facebook login buttons
+    const fbButtons = document.querySelectorAll('.social-btn[aria-label="Facebook"]');
+    fbButtons.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await FacebookAuth.loginWithSupabase();
+        });
+    });
 };
 
 // ========================================
