@@ -743,16 +743,6 @@ const initEventListeners = () => {
     LoginHandler.form.addEventListener('submit', LoginHandler.submit);
     RegisterHandler.form.addEventListener('submit', RegisterHandler.submit);
     
-    // Xử lý đăng nhập faccebook
-    const facebookButtons = document.querySelectorAll('.social-btn[aria-label="Facebook"]');
-    facebookButtons.forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            console.log('🔵 Bấm nút đăng nhập Facebook');
-            await FacebookAuth.login();
-        });
-    });
-
     // Form switching links
     const toggleLinks = document.querySelectorAll('.toggle-form-link');
     toggleLinks.forEach(link => {
@@ -816,8 +806,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     checkLoginStatus();
     
-    checkOAuthCallback();
-
     // Log current users
     if (CONFIG.storageMode !== 'supabase') {
         Storage.getUsers().then(users => {
@@ -946,84 +934,3 @@ window.addEventListener('resize', () => {
         panelContainer.classList.remove('slide-left');
     }
 });
-
-// ========================================
-// XỬ LÝ ĐĂNG NHẬP BẰNG FACEBOOK
-// ========================================
-
-const FacebookAuth = {
-    // Đăng nhập bằng Facebook
-    login: async () => {
-        try {
-            const { data, error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'facebook',
-                options: {
-                    redirectTo: window.location.origin + '/login.html',
-                    scopes: 'email public_profile'
-                }
-            });
-
-            if (error) throw error;
-
-            // Supabase sẽ tự động redirect đến Facebook
-            console.log('🔄 Đang chuyển đến Facebook...');
-            
-        } catch (error) {
-            console.error('❌ Lỗi đăng nhập Facebook:', error);
-            Toast.error('Không thể đăng nhập bằng Facebook. Vui lòng thử lại!');
-            throw error;
-        }
-    },
-
-    // Xử lý callback sau khi đăng nhập Facebook
-    handleCallback: async () => {
-        try {
-            // Lấy session hiện tại
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
-
-            if (error) throw error;
-
-            if (session && session.user) {
-                const user = session.user;
-                
-                console.log('✅ Đăng nhập Facebook thành công:', user);
-
-                // Lưu thông tin user vào localStorage
-                localStorage.setItem('teaUser', JSON.stringify({
-                    id: user.id,
-                    email: user.email,
-                    name: user.user_metadata?.full_name || user.user_metadata?.name || 'Người dùng',
-                    avatar: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
-                    provider: 'facebook',
-                    loginAt: Date.now()
-                }));
-
-                // Hiển thị thông báo thành công
-                Toast.success(`Chào mừng ${user.user_metadata?.full_name || 'bạn'} 🎉`);
-
-                // Redirect về trang chủ sau 1.5 giây
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-            }
-        } catch (error) {
-            console.error('❌ Lỗi xử lý callback Facebook:', error);
-            Toast.error('Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại!');
-        }
-    }
-};
-
-// ========================================
-// XỬ LÝ CALLBACK TỪ FACEBOOK
-// ========================================
-
-// Kiểm tra nếu URL có hash (callback từ OAuth)
-const checkOAuthCallback = async () => {
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    
-    if (accessToken) {
-        console.log('🔍 Phát hiện callback từ Facebook...');
-        await FacebookAuth.handleCallback();
-    }
-};
