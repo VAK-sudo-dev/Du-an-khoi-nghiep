@@ -218,7 +218,24 @@ function lockEmailField() {
 
     // Blur phần input-wrap
     const inputWrap = emailFormGroup.querySelector('.input-wrap');
-    if (inputWrap) inputWrap.style.filter = 'blur(3px)';
+   if (inputWrap) {
+        const lockIcon = document.createElement('span');
+        lockIcon.style.cssText = `
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        `;
+        lockIcon.innerHTML = `
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#34a853" stroke-width="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+        `;
+        inputWrap.style.position = 'relative';
+        inputWrap.appendChild(lockIcon);
+    }
 
     // Overlay thông báo
     const overlay = document.createElement('div');
@@ -232,15 +249,6 @@ function lockEmailField() {
         z-index: 10;
         pointer-events: none;
         padding: 0 8px;
-    `;
-    overlay.innerHTML = `
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5a3e2b" stroke-width="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        <span style="color:#5a3e2b;font-size:0.82rem;font-weight:700;font-family:'Quicksand',sans-serif;">
-            Email không thể thay đổi
-        </span>
     `;
     emailFormGroup.appendChild(overlay);
 }
@@ -261,7 +269,7 @@ function lockPasswordCard(provider) {
     // ── Bước 2: Tạo blurWrapper bọc TẤT CẢ nội dung card ─────────
     const blurWrapper = document.createElement('div');
     blurWrapper.style.cssText = `
-        filter: blur(5px);
+        filter: blur(5px) sepia(1) saturate(3) hue-rotate(80deg) brightness(1.1);
         pointer-events: none;
         user-select: none;
     `;
