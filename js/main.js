@@ -301,7 +301,7 @@ function initSearch() {
             searchResults.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Không tìm thấy sản phẩm</p>';
         } else {
             searchResults.innerHTML = results.map(product => `
-                <div class="search-result-item" onclick="closeSearchAndScroll(${product.id})">
+                <div class="search-result-item" onclick="openProductFromSearch(${product.id})">
                     <img src="${product.image}" alt="${product.name}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
                     <div style="flex: 1;">
                         <div style="font-weight: 600; color: #2D5016;">${product.name}</div>
@@ -321,6 +321,21 @@ function closeSearchAndScroll(productId) {
     // Scroll to products section
     const productsSection = document.getElementById('products');
     productsSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Open product from search results: close modal then navigate to product detail
+function openProductFromSearch(productId) {
+    const searchModal = document.getElementById('searchModal');
+    if (searchModal) searchModal.classList.remove('active');
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = '';
+    const searchResults = document.getElementById('searchResults');
+    if (searchResults) searchResults.innerHTML = '';
+
+    // small delay to allow modal close animations, then navigate
+    setTimeout(() => {
+        goToProductDetail(productId);
+    }, 120);
 }
 
 // ====== EVENT LISTENERS ======
