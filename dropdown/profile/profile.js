@@ -88,9 +88,12 @@ async function loadUserProfile() {
         avatarPreview.src = userData.avatar;
     }
 
-    // Nếu đăng nhập bằng provider ngoài (Google/Facebook) → disable email & password form
+    // [FIX] Luôn khóa email với mọi phương thức đăng nhập
+    lockEmailField();
+
+    // [FIX] Chỉ khóa password nếu là Google/Facebook
     if (userData.provider && userData.provider !== 'email') {
-        disableExternalProviderForms(userData.provider);
+        lockPasswordCard(userData.provider);
     }
 }
 
@@ -222,54 +225,70 @@ document.querySelectorAll('.eye-toggle').forEach(btn => {
 });
 
 /* ============================================================
-    DISABLE EXTERNAL PROVIDER FORMS
+    [FIX] LOCK EMAIL – khóa email với MỌI phương thức đăng nhập
     ============================================================ */
-/**
- * Disable forms cho các tài khoản đăng nhập bằng Google/Facebook
- * @param {string} provider tên provider (google, facebook, etc.)
- */
-function disableExternalProviderForms(provider) {
-    const providerLabel = provider.charAt(0).toUpperCase() + provider.slice(1); // "Google", "Facebook"
+function lockEmailField() {
+    const emailFormGroup = inputEmail.closest('.form-group');
+    if (!emailFormGroup) return;
+
+    inputEmail.disabled = true;
+    emailFormGroup.style.position = 'relative';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'locked-overlay';
+    overlay.innerHTML = `
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>Email không thể thay đổi</span>
+    `;
+
+    // Blur chỉ phần input-wrap, không blur label
+    const inputWrap = emailFormGroup.querySelector('.input-wrap');
+    if (inputWrap) inputWrap.style.filter = 'blur(3px)';
+
+    emailFormGroup.appendChild(overlay);
+}
+
+/* ============================================================
+    [FIX] LOCK PASSWORD CARD – khóa password với Google/Facebook
+    ============================================================ */
+function lockPasswordCard(provider) {
+    const providerLabel = provider.charAt(0).toUpperCase() + provider.slice(1);
     const message = `Bạn không thể thay đổi thông tin này khi đăng nhập bằng ${providerLabel}`;
 
-    // ── Blur email field ──────────────────────────────────────────
-    const emailFormGroup = inputEmail.closest('.form-group');
-    if (emailFormGroup) {
-        emailFormGroup.classList.add('field-locked');
-        inputEmail.disabled = true;
-
-        const overlay = document.createElement('div');
-        overlay.className = 'locked-overlay';
-        overlay.innerHTML = `
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <span>${message}</span>
-        `;
-        emailFormGroup.style.position = 'relative';
-        emailFormGroup.appendChild(overlay);
-    }
-
-    // ── Blur toàn bộ password card ────────────────────────────────
     const passwordCard = passwordForm.closest('.card');
-    if (passwordCard) {
-        passwordCard.classList.add('card-locked');
+    if (!passwordCard) return;
 
-        const overlay = document.createElement('div');
-        overlay.className = 'locked-overlay locked-overlay--card';
-        overlay.innerHTML = `
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <span>${message}</span>
-        `;
-        passwordCard.style.position = 'relative';
-        passwordCard.appendChild(overlay);
+    passwordCard.style.position = 'relative';
+    passwordCard.style.overflow = 'hidden';
+
+    // Wrap nội dung form vào div rồi blur div đó (tránh lỗi filter + position: absolute)
+    const blurWrapper = document.createElement('div');
+    blurWrapper.style.filter = 'blur(4px)';
+    blurWrapper.style.pointerEvents = 'none';
+    blurWrapper.style.userSelect = 'none';
+
+    // Di chuyển tất cả children của form vào blurWrapper
+    while (passwordForm.firstChild) {
+        blurWrapper.appendChild(passwordForm.firstChild);
     }
+    passwordForm.appendChild(blurWrapper);
 
-    // Disable tất cả inputs trong password form để tránh focus bằng tab
+    // Tạo overlay thông báo
+    const overlay = document.createElement('div');
+    overlay.className = 'locked-overlay locked-overlay--card';
+    overlay.innerHTML = `
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>${message}</span>
+    `;
+    passwordCard.appendChild(overlay);
+
+    // Disable tất cả inputs để tránh focus bằng tab
     passwordForm.querySelectorAll('input, button').forEach(el => el.disabled = true);
 }
 

@@ -366,6 +366,34 @@ const FacebookAuth = {
             console.error('❌ Facebook login error:', error);
             Toast.error('Không thể kết nối Facebook. Vui lòng thử lại!');
         }
+    },
+
+    // [FIX] Xử lý callback sau khi Facebook redirect về
+    handleCallback: async () => {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        
+        if (error) {
+            console.error('❌ Lỗi lấy session Facebook:', error);
+            return null;
+        }
+
+        if (session) {
+            console.log('✅ Đăng nhập Facebook thành công:', session.user);
+            
+            // [FIX] Lưu provider: 'facebook' để profile.js nhận biết
+            localStorage.setItem('teaUser', JSON.stringify({
+                id: session.user.id,
+                email: session.user.email,
+                name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email,
+                avatar: session.user.user_metadata?.avatar_url,
+                provider: 'facebook',  // ← FIX: thêm provider
+                loginAt: Date.now()
+            }));
+            
+            return session.user;
+        }
+
+        return null;
     }
 };
 
@@ -422,7 +450,7 @@ const GoogleAuth = {
                 email: session.user.email,
                 name: session.user.user_metadata?.full_name || session.user.email,
                 avatar: session.user.user_metadata?.avatar_url,
-                provider: 'google',
+                provider: 'google',  // ← đã có sẵn, giữ nguyên
                 loginAt: Date.now()
             }));
             
@@ -587,10 +615,12 @@ const LoginHandler = {
 
             setButtonLoading(submitButton, false);
 
+            // [FIX] Thêm provider: 'email' để profile.js phân biệt được
             localStorage.setItem('teaUser', JSON.stringify({
                 id: user.id,
                 email: user.email,
                 name: user.user_metadata?.name || 'Người dùng',
+                provider: 'email',  // ← FIX: thêm provider
                 loginAt: Date.now()
             }));
 
@@ -895,10 +925,21 @@ const checkLoginStatus = async () => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     if (hashParams.get('access_token')) {
         console.log('🔄 Đang xử lý OAuth callback...');
-        
-        const user = await GoogleAuth.handleCallback();
+
+        // [FIX] Phân biệt Google vs Facebook qua session provider
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        const oauthProvider = session?.user?.app_metadata?.provider;
+
+        let user = null;
+        if (oauthProvider === 'facebook') {
+            user = await FacebookAuth.handleCallback();
+        } else {
+            // Mặc định xử lý như Google
+            user = await GoogleAuth.handleCallback();
+        }
+
         if (user) {
-            Toast.success('Đăng nhập Google thành công!');
+            Toast.success('Đăng nhập thành công!');
             FormSwitcher.showSuccess('Chào mừng bạn đến với Trà Phú Hội 🌿');
             
             // Redirect về trang chủ sau 1.5 giây
