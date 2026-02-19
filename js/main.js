@@ -75,9 +75,14 @@ let isRequestingAI = false;
 document.addEventListener('DOMContentLoaded', async () => {
     initCart();
     await initAuth();
-    renderProducts();
+    // Only render products if we're on a page with product grid
+    if (document.getElementById('productsGrid')) {
+        renderProducts();
+    }
     initEventListeners();
-    initScrollAnimations();
+    if (document.getElementById('productsGrid')) {
+        initScrollAnimations();
+    }
     initSmoothScroll();
 });
 
@@ -199,6 +204,8 @@ function formatPrice(price) {
 // Render sản phẩm
 function renderProducts(filter = 'all') {
     const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return; // Exit early if productsGrid doesn't exist
+    
     let filteredProducts = productsData;
 
     // Lọc theo category
@@ -243,10 +250,12 @@ function renderProducts(filter = 'all') {
 
     // Hiện/ẩn nút "Xem thêm"
     const loadMoreBtn = document.getElementById('loadMore');
-    if (productsToShow.length >= filteredProducts.length) {
-        loadMoreBtn.style.display = 'none';
-    } else {
-        loadMoreBtn.style.display = 'inline-block';
+    if (loadMoreBtn) {
+        if (productsToShow.length >= filteredProducts.length) {
+            loadMoreBtn.style.display = 'none';
+        } else {
+            loadMoreBtn.style.display = 'inline-block';
+        }
     }
 
     // Trigger scroll animation
@@ -271,6 +280,8 @@ function getCategoryName(category) {
 function initSearch() {
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
+
+    if (!searchInput || !searchResults) return; // Exit early if elements don't exist
 
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();
@@ -320,16 +331,6 @@ function initEventListeners() {
     console.log('User button found:', document.getElementById('userBtn'));
     console.log('Is logged in:', isLoggedIn);
 
-    // Header scroll effect
-    window.addEventListener('scroll', () => {
-        const header = document.getElementById('header');
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-
     // Active nav link khi scroll
     function updateActiveNav() {
         const sections = document.querySelectorAll('section[id]');
@@ -355,95 +356,102 @@ function initEventListeners() {
         });
     }
 
-    // Gọi hàm khi scroll
+    // Header scroll effect + active nav update
     window.addEventListener('scroll', () => {
-        // Header scroll effect (giữ nguyên)
         const header = document.getElementById('header');
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        if (header) {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         }
-        
-        // Cập nhật active nav
         updateActiveNav();
     });
 
-    // Gọi lần đầu khi load
+    // Gọi updateActiveNav lần đầu khi load
     setTimeout(updateActiveNav, 100);
 
-    // Hamburger menu
+    // Hamburger menu - with null check
     const hamburger = document.getElementById('hamburger');
     const nav = document.getElementById('nav');
     
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        nav.classList.toggle('active');
-    });
-
-    // Close menu khi click vào nav link
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            nav.classList.remove('active');
+    if (hamburger && nav) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            nav.classList.toggle('active');
         });
-    });
 
-    // Cart sidebar toggle
+        // Close menu khi click vào nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                nav.classList.remove('active');
+            });
+        });
+    }
+
+    // Cart sidebar toggle - with null checks
     const cartBtn = document.getElementById('cartBtn');
     const cartSidebar = document.getElementById('cartSidebar');
     const cartOverlay = document.getElementById('cartOverlay');
     const cartClose = document.getElementById('cartClose');
 
-    cartBtn.addEventListener('click', () => {
-        cartSidebar.classList.add('active');
-        cartOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    cartClose.addEventListener('click', closeCart);
-    cartOverlay.addEventListener('click', closeCart);
-
     function closeCart() {
-        cartSidebar.classList.remove('active');
-        cartOverlay.classList.remove('active');
+        if (cartSidebar) cartSidebar.classList.remove('active');
+        if (cartOverlay) cartOverlay.classList.remove('active');
         document.body.style.overflow = 'auto';
     }
 
-    // Search modal
+    if (cartBtn && cartSidebar && cartOverlay) {
+        cartBtn.addEventListener('click', () => {
+            cartSidebar.classList.add('active');
+            cartOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        if (cartClose) cartClose.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+    }
+
+    // Search modal - with null checks
     const searchBtn = document.querySelector('.search-btn');
     const searchModal = document.getElementById('searchModal');
     const searchClose = document.getElementById('searchClose');
+    const searchInput = document.getElementById('searchInput');
 
-    searchBtn.addEventListener('click', () => {
-        searchModal.classList.add('active');
-        document.getElementById('searchInput').focus();
-    });
+    if (searchBtn && searchModal && searchClose) {
+        searchBtn.addEventListener('click', () => {
+            searchModal.classList.add('active');
+            if (searchInput) searchInput.focus();
+        });
 
-    searchClose.addEventListener('click', () => {
-        searchModal.classList.remove('active');
-    });
-
-    searchModal.addEventListener('click', (e) => {
-        if (e.target === searchModal) {
+        searchClose.addEventListener('click', () => {
             searchModal.classList.remove('active');
-        }
-    });
+        });
+
+        searchModal.addEventListener('click', (e) => {
+            if (e.target === searchModal) {
+                searchModal.classList.remove('active');
+            }
+        });
+    }
 
     initSearch();
 
-    // Product filters
+    // Product filters - only if product page
     const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            currentFilter = btn.dataset.filter;
-            displayedProducts = 8; // Reset số lượng hiển thị
-            renderProducts(currentFilter);
+    if (filterBtns.length > 0) {
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentFilter = btn.dataset.filter;
+                displayedProducts = 8; // Reset số lượng hiển thị
+                renderProducts(currentFilter);
+            });
         });
-    });
+    }
 
     // Category cards
     const categoryCards = document.querySelectorAll('.category-card');
@@ -540,7 +548,7 @@ function initEventListeners() {
     if (profileBtn) {
         profileBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Chức năng Hồ sơ - Đang phát triển');
+            window.location.href = 'dropdown/profile/profile.html';
             userDropdown.classList.remove('active');
         });
     }
@@ -758,6 +766,8 @@ function logoutUser() {
 
 function updateUserUI() {
     const userBtn = document.getElementById('userBtn');
+    if (!userBtn) return; // Exit if userBtn doesn't exist
+
     const userArrow = userBtn.querySelector('.user-arrow');
     const userName = document.getElementById('userName');
     
